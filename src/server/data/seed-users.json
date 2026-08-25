@@ -1,0 +1,23 @@
+[
+  {
+    "id": "usr_demo_1",
+    "name": "Aarav Sharma",
+    "email": "demo.citizen@example.com",
+    "passwordHash": "$2a$10$3zR7pS6v6F4KwqnUoV5f3.nBwL6p4sHvyx5Y7kC2sL3n0mZ1Oq8Pa",
+    "plainPasswordForDemo": "Demo@1234"
+  },
+  {
+    "id": "usr_demo_2",
+    "name": "Priya Patel",
+    "email": "demo.citizen2@example.com",
+    "passwordHash": "$2a$10$3zR7pS6v6F4KwqnUoV5f3.nBwL6p4sHvyx5Y7kC2sL3n0mZ1Oq8Pa",
+    "plainPasswordForDemo": "Demo@1234"
+  },
+  {
+    "id": "usr_judge",
+    "name": "Honorable Judge Evaluator",
+    "email": "judge.evaluator@nic.in",
+    "passwordHash": "$2a$10$3zR7pS6v6F4KwqnUoV5f3.nBwL6p4sHvyx5Y7kC2sL3n0mZ1Oq8Pa",
+    "plainPasswordForDemo": "evaluator@2026"
+  }
+]
