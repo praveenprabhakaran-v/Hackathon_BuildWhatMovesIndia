@@ -1,8 +1,0 @@
-{
-  "name": "RTI Online — Citizen Portal Reconstruction",
-  "description": "A modern, accessible, mobile-first citizen portal reconstruction of RTI Online for filing, tracking, and appealing Right to Information requests.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}
