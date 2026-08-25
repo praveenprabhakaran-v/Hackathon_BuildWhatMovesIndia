@@ -1,0 +1,73 @@
+[
+  {
+    "scenarioId": "DEMO_CITIZEN_01",
+    "registrationNumber": "DOPTR/R/E/26/00991",
+    "type": "REQUEST",
+    "authorityId": "auth_doptr",
+    "status": "UNDER_PROCESSING",
+    "isBplExempt": false,
+    "applicationFee": 10,
+    "filedOn": "2026-08-18T10:00:00.000Z",
+    "lastUpdated": "2026-08-20T14:30:00.000Z",
+    "applicant": {
+      "fullName": "Demo Citizen",
+      "gender": "MALE",
+      "email": "demo.citizen@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi",
+      "addressLine1": "Flat 101, Civil Lines, Central District",
+      "pincode": "110054",
+      "category": "URBAN",
+      "educationalStatus": "LITERATE"
+    },
+    "authority": {
+      "id": "auth_doptr",
+      "code": "DOPTR",
+      "name": "Department of Personnel and Training (DoPT)",
+      "ministry": "Ministry of Personnel, Public Grievances and Pensions",
+      "department": "RTI Division",
+      "type": "Central Government",
+      "active": true,
+      "cpioName": "Smt. Kavitha Pillai",
+      "cpioDesignation": "Under Secretary (RTI) & CPIO",
+      "cpioEmail": "usrti-dopt@nic.in",
+      "cpioPhone": "+91-11-24625540",
+      "faaName": "Shri Pawan Kumar",
+      "faaDesignation": "Director (RTI) & FAA",
+      "address": "Lok Nayak Bhawan, Khan Market, New Delhi - 110003",
+      "avgTurnaroundDays": 15
+    },
+    "bpl": { "isBpl": false },
+    "requestText": "Statistical records on RTI disposal rates, First Appeals pendency, and proactive Section 4 disclosure compliance reports for central ministries in FY 2024-25.",
+    "supportingDocuments": [],
+    "timeline": [
+      {
+        "state": "SUBMITTED",
+        "title": "Application Lodged",
+        "description": "RTI application filed and ₹10 statutory fee received.",
+        "at": "2026-08-18T10:00:00.000Z"
+      },
+      {
+        "state": "PAYMENT_SUCCESS",
+        "title": "Payment Confirmed",
+        "description": "Transaction TXN_774910 confirmed via Bharatkosh.",
+        "at": "2026-08-18T10:00:05.000Z"
+      },
+      {
+        "state": "RECEIVED",
+        "title": "Received by Nodal Officer",
+        "description": "Logged in Central DoPT Register.",
+        "at": "2026-08-19T09:15:00.000Z"
+      },
+      {
+        "state": "UNDER_PROCESSING",
+        "title": "Under Processing by CPIO",
+        "description": "Assigned to Smt. Kavitha Pillai, Under Secretary & CPIO for collation of records.",
+        "at": "2026-08-20T14:30:00.000Z"
+      }
+    ],
+    "canAppeal": false
+  }
+]

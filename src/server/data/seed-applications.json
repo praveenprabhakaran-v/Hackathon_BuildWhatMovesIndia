@@ -1,0 +1,452 @@
+[
+  {
+    "scenarioId": "DEMO_CITIZEN_01",
+    "registrationNumber": "DOPTR/R/E/26/00991",
+    "type": "REQUEST",
+    "authorityId": "auth_doptr",
+    "status": "UNDER_PROCESSING",
+    "isBplExempt": false,
+    "applicationFee": 10,
+    "filedOn": "2026-08-18T10:00:00.000Z",
+    "lastUpdated": "2026-08-20T14:30:00.000Z",
+    "applicant": {
+      "fullName": "Demo Citizen",
+      "gender": "MALE",
+      "email": "demo.citizen@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi",
+      "addressLine1": "Flat 101, Civil Lines, Central District",
+      "pincode": "110054",
+      "category": "URBAN",
+      "educationalStatus": "LITERATE"
+    },
+    "authority": {
+      "id": "auth_doptr",
+      "code": "DOPTR",
+      "name": "Department of Personnel and Training (DoPT)",
+      "ministry": "Ministry of Personnel, Public Grievances and Pensions",
+      "department": "RTI Division",
+      "type": "Central Government",
+      "active": true,
+      "cpioName": "Smt. Kavitha Pillai",
+      "cpioDesignation": "Under Secretary (RTI) & CPIO",
+      "cpioEmail": "usrti-dopt@nic.in",
+      "cpioPhone": "+91-11-24625540",
+      "faaName": "Shri Pawan Kumar",
+      "faaDesignation": "Director (RTI) & FAA",
+      "address": "Lok Nayak Bhawan, Khan Market, New Delhi - 110003",
+      "avgTurnaroundDays": 15
+    },
+    "bpl": { "isBpl": false },
+    "requestText": "Statistical records on RTI disposal rates, First Appeals pendency, and proactive Section 4 disclosure compliance reports for central ministries in FY 2024-25.",
+    "supportingDocuments": [],
+    "timeline": [
+      {
+        "state": "SUBMITTED",
+        "title": "Application Lodged",
+        "description": "RTI application filed and ₹10 statutory fee received.",
+        "at": "2026-08-18T10:00:00.000Z"
+      },
+      {
+        "state": "PAYMENT_SUCCESS",
+        "title": "Payment Confirmed",
+        "description": "Transaction TXN_774910 confirmed via Bharatkosh.",
+        "at": "2026-08-18T10:00:05.000Z"
+      },
+      {
+        "state": "RECEIVED",
+        "title": "Received by Nodal Officer",
+        "description": "Logged in Central DoPT Register.",
+        "at": "2026-08-19T09:15:00.000Z"
+      },
+      {
+        "state": "UNDER_PROCESSING",
+        "title": "Under Processing by CPIO",
+        "description": "Assigned to Smt. Kavitha Pillai, Under Secretary & CPIO for collation of records.",
+        "at": "2026-08-20T14:30:00.000Z"
+      }
+    ],
+    "canAppeal": false
+  },
+  {
+    "scenarioId": "A_NORMAL",
+    "registrationNumber": "DORF/R/E/26/00482",
+    "type": "REQUEST",
+    "authorityId": "auth_fin_revenue",
+    "status": "RESPONSE_AVAILABLE",
+    "isBplExempt": false,
+    "applicationFee": 10,
+    "filedOn": "2026-08-10T10:30:00.000Z",
+    "lastUpdated": "2026-08-20T14:45:00.000Z",
+    "applicant": {
+      "fullName": "Aarav Sharma",
+      "gender": "MALE",
+      "email": "aarav.sharma@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi",
+      "addressLine1": "Flat 402, Shanti Vihar, Connaught Place",
+      "pincode": "110001",
+      "category": "URBAN",
+      "educationalStatus": "LITERATE"
+    },
+    "authority": {
+      "id": "auth_fin_revenue",
+      "code": "DORF",
+      "name": "Department of Revenue",
+      "ministry": "Ministry of Finance",
+      "department": "Central Revenue Division",
+      "type": "Central Government",
+      "active": true,
+      "cpioName": "Shri T. R. Subramanian",
+      "cpioDesignation": "Under Secretary & CPIO",
+      "cpioEmail": "cpio.revenue@nic.in",
+      "cpioPhone": "+91-11-23095566",
+      "faaName": "Shri V. K. Goel",
+      "faaDesignation": "Joint Secretary & FAA",
+      "address": "North Block, New Delhi - 110001",
+      "avgTurnaroundDays": 20
+    },
+    "bpl": { "isBpl": false },
+    "requestText": "Kindly provide copies of administrative guidelines issued regarding GST reconciliation timelines for registered taxpayers during FY 2024-25.",
+    "supportingDocuments": [],
+    "timeline": [
+      { "state": "SUBMITTED", "title": "Application Lodged", "description": "RTI application filed and ₹10 statutory fee received.", "at": "2026-08-10T10:30:00.000Z" },
+      { "state": "PAYMENT_SUCCESS", "title": "Payment Confirmed", "description": "Transaction TXN_882910 confirmed via Bharatkosh.", "at": "2026-08-10T10:30:05.000Z" },
+      { "state": "RECEIVED", "title": "Received by Nodal Officer", "description": "Received by Nodal Officer at Department of Revenue.", "at": "2026-08-11T09:15:00.000Z" },
+      { "state": "UNDER_PROCESSING", "title": "Under Scrutiny by CPIO", "description": "Assigned to CPIO Shri T. R. Subramanian for record compilation.", "at": "2026-08-11T09:30:00.000Z" },
+      { "state": "RESPONSE_AVAILABLE", "title": "Response Uploaded & Dispatched", "description": "Final information and signed annexure issued by CPIO.", "at": "2026-08-20T14:45:00.000Z" }
+    ],
+    "responseDocument": {
+      "fileId": "doc_reply_00482",
+      "fileName": "DORF_RTI_Reply_00482.pdf",
+      "releasedOn": "2026-08-20T14:45:00.000Z",
+      "cpioRemarks": "Certified notification copies attached in Annexure A.",
+      "dispatchRef": "DORF/RTI/2026/DISP-7812"
+    },
+    "canAppeal": true
+  },
+  {
+    "scenarioId": "B_ADDITIONAL_FEE",
+    "registrationNumber": "MOHFW/R/E/26/00192",
+    "type": "REQUEST",
+    "authorityId": "auth_mohfw",
+    "status": "ADDITIONAL_FEE_REQUIRED",
+    "isBplExempt": false,
+    "applicationFee": 10,
+    "filedOn": "2026-08-14T11:00:00.000Z",
+    "lastUpdated": "2026-08-18T16:20:00.000Z",
+    "applicant": {
+      "fullName": "Aarav Sharma",
+      "gender": "MALE",
+      "email": "aarav.sharma@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi",
+      "addressLine1": "Flat 402, Shanti Vihar",
+      "pincode": "110001"
+    },
+    "authority": {
+      "id": "auth_mohfw",
+      "code": "MOHFW",
+      "name": "Ministry of Health and Family Welfare",
+      "ministry": "Ministry of Health & Family Welfare",
+      "department": "Department of Health & Family Welfare",
+      "type": "Central Government",
+      "active": true,
+      "cpioName": "Shri Rajesh K. Verma",
+      "cpioDesignation": "Director (Public Health) & CPIO",
+      "cpioEmail": "rajesh.verma@nic.in",
+      "cpioPhone": "+91-11-23061234",
+      "faaName": "Dr. Sunita Sharma",
+      "faaDesignation": "Joint Secretary & FAA",
+      "address": "Nirman Bhawan, New Delhi",
+      "avgTurnaroundDays": 21
+    },
+    "bpl": { "isBpl": false },
+    "requestText": "Please provide certified inspection reports and state-wise allocations under National Health Mission for 2023-2025.",
+    "supportingDocuments": [],
+    "timeline": [
+      { "state": "SUBMITTED", "title": "Application Lodged", "description": "Lodged under Sec 6(1).", "at": "2026-08-14T11:00:00.000Z" },
+      { "state": "UNDER_PROCESSING", "title": "CPIO Scrutiny", "description": "Information identified across 60 pages.", "at": "2026-08-16T10:00:00.000Z" },
+      { "state": "ADDITIONAL_FEE_REQUIRED", "title": "Additional Fee Demand Issued", "description": "Intimation issued under Section 7(3) for reproduction charges.", "at": "2026-08-18T16:20:00.000Z" }
+    ],
+    "actionRequired": {
+      "type": "ADDITIONAL_FEE",
+      "amount": 120,
+      "reason": "60 pages of photocopies @ ₹2 per page as prescribed under RTI Fee and Cost Rules, 2005.",
+      "deadline": "2026-09-17T23:59:59.000Z",
+      "feeBreakdown": { "pages": 60, "ratePerPage": 2 }
+    }
+  },
+  {
+    "scenarioId": "C_TRANSFER",
+    "registrationNumber": "DOTEL/R/E/26/00812",
+    "type": "REQUEST",
+    "authorityId": "auth_dotel",
+    "status": "TRANSFERRED",
+    "isBplExempt": false,
+    "applicationFee": 10,
+    "filedOn": "2026-08-08T09:00:00.000Z",
+    "lastUpdated": "2026-08-12T11:15:00.000Z",
+    "applicant": {
+      "fullName": "Aarav Sharma",
+      "gender": "MALE",
+      "email": "aarav.sharma@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi",
+      "addressLine1": "Connaught Place",
+      "pincode": "110001"
+    },
+    "authority": {
+      "id": "auth_dotel",
+      "code": "DOTEL",
+      "name": "Department of Telecommunications",
+      "ministry": "Ministry of Communications",
+      "type": "Central Government",
+      "active": true,
+      "cpioName": "Ms. Priyamvada Joshi",
+      "cpioDesignation": "Director & CPIO",
+      "cpioEmail": "cpio.dot@gov.in",
+      "cpioPhone": "+91-11-23036000",
+      "faaName": "Shri K. Ramanujam",
+      "faaDesignation": "DDG & FAA",
+      "address": "Sanchar Bhawan, New Delhi",
+      "avgTurnaroundDays": 19
+    },
+    "bpl": { "isBpl": false },
+    "requestText": "Query concerning satellite spectrum allocation guidelines and telecom cyber security auditing protocols.",
+    "supportingDocuments": [],
+    "timeline": [
+      { "state": "SUBMITTED", "title": "Application Lodged", "description": "Filed with Dept of Telecom.", "at": "2026-08-08T09:00:00.000Z" },
+      { "state": "TRANSFERRED", "title": "Transferred under Section 6(3)", "description": "Subject matter pertains to Ministry of Electronics & IT (MeitY).", "at": "2026-08-12T11:15:00.000Z" }
+    ],
+    "transferredTo": {
+      "registrationNumber": "MEITY/R/T/26/00914",
+      "authority": "Ministry of Electronics and Information Technology",
+      "transferredOn": "2026-08-12T11:15:00.000Z",
+      "reason": "Cyber security audit protocols are maintained by MeitY.",
+      "section": "Section 6(3) of RTI Act, 2005"
+    }
+  },
+  {
+    "scenarioId": "D_MULTIPLE_CPIO",
+    "registrationNumber": "RAILW/R/E/26/01205",
+    "type": "REQUEST",
+    "authorityId": "auth_railw",
+    "status": "MULTIPLE_CPIO",
+    "isBplExempt": false,
+    "applicationFee": 10,
+    "filedOn": "2026-08-05T14:20:00.000Z",
+    "lastUpdated": "2026-08-15T10:00:00.000Z",
+    "applicant": {
+      "fullName": "Aarav Sharma",
+      "gender": "MALE",
+      "email": "aarav.sharma@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi",
+      "addressLine1": "Connaught Place",
+      "pincode": "110001"
+    },
+    "authority": {
+      "id": "auth_railw",
+      "code": "RAILW",
+      "name": "Ministry of Railways (Railway Board)",
+      "ministry": "Ministry of Railways",
+      "type": "Central Government",
+      "active": true,
+      "cpioName": "Shri Amitabh Saxena",
+      "cpioDesignation": "Executive Director & CPIO",
+      "cpioEmail": "cpio.rb@rb.railnet.gov.in",
+      "cpioPhone": "+91-11-23384567",
+      "faaName": "Ms. Meenakshi Sundaram",
+      "faaDesignation": "PED & FAA",
+      "address": "Rail Bhawan, New Delhi",
+      "avgTurnaroundDays": 24
+    },
+    "bpl": { "isBpl": false },
+    "requestText": "Statistical records on Vande Bharat rake deployment, catering quality audit scores, and station modernization budgets for Northern & Western Railway zones.",
+    "supportingDocuments": [],
+    "timeline": [
+      { "state": "SUBMITTED", "title": "Application Lodged", "description": "Lodged with Railway Board.", "at": "2026-08-05T14:20:00.000Z" },
+      { "state": "MULTIPLE_CPIO", "title": "Split across 3 Zonal CPIOs", "description": "Questions divided across Mechanical, Commercial, and Works Directorates.", "at": "2026-08-09T10:00:00.000Z" }
+    ],
+    "childApplications": [
+      {
+        "registrationNumber": "RAILW/R/E/26/01205/1",
+        "authority": "Directorate of Mechanical Engineering (Coaching)",
+        "cpioName": "Shri R. P. Gupta (Dir Mechanical)",
+        "subject": "Vande Bharat Rake Manufacturing & Deployment",
+        "status": "RESPONSE_AVAILABLE",
+        "transferredOn": "2026-08-09T10:00:00.000Z"
+      },
+      {
+        "registrationNumber": "RAILW/R/E/26/01205/2",
+        "authority": "Directorate of Tourism & Catering (IRCTC)",
+        "cpioName": "Ms. Sangeeta Verma (Joint Dir Catering)",
+        "subject": "Catering Quality Audits & Inspection Fines",
+        "status": "UNDER_PROCESSING",
+        "transferredOn": "2026-08-09T10:00:00.000Z"
+      },
+      {
+        "registrationNumber": "RAILW/R/E/26/01205/3",
+        "authority": "Directorate of Station Development & Works",
+        "cpioName": "Shri Anuj Sharma (Dir Works)",
+        "subject": "Amrit Bharat Station Modernization Fund Allocations",
+        "status": "UNDER_PROCESSING",
+        "transferredOn": "2026-08-09T10:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "scenarioId": "E_DOC_REQUIRED",
+    "registrationNumber": "CBICD/R/E/26/00764",
+    "type": "REQUEST",
+    "authorityId": "auth_cbicd",
+    "status": "SUPPORTING_DOCUMENT_REQUIRED",
+    "isBplExempt": false,
+    "applicationFee": 10,
+    "filedOn": "2026-08-11T16:00:00.000Z",
+    "lastUpdated": "2026-08-15T12:30:00.000Z",
+    "applicant": {
+      "fullName": "Aarav Sharma",
+      "gender": "MALE",
+      "email": "aarav.sharma@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi",
+      "addressLine1": "Connaught Place",
+      "pincode": "110001"
+    },
+    "authority": {
+      "id": "auth_cbicd",
+      "code": "CBICD",
+      "name": "Central Board of Indirect Taxes and Customs (CBIC)",
+      "ministry": "Ministry of Finance",
+      "type": "Central Government",
+      "active": true,
+      "cpioName": "Shri Vivek Murthy",
+      "cpioDesignation": "Assistant Commissioner & CPIO",
+      "cpioEmail": "cpio.cbic@gov.in",
+      "cpioPhone": "+91-11-23092288",
+      "faaName": "Shri D. P. Sengupta",
+      "faaDesignation": "Commissioner & FAA",
+      "address": "North Block, New Delhi",
+      "avgTurnaroundDays": 25
+    },
+    "bpl": { "isBpl": false },
+    "requestText": "Clarification regarding customs clearance delay for consignment reference BL/2026/IN-9810.",
+    "supportingDocuments": [],
+    "timeline": [
+      { "state": "SUBMITTED", "title": "Application Lodged", "description": "Lodged under Sec 6(1).", "at": "2026-08-11T16:00:00.000Z" },
+      { "state": "SUPPORTING_DOCUMENT_REQUIRED", "title": "Bill of Lading Copy Requested", "description": "CPIO requires legible copy of shipping bill / consignment note to identify port record.", "at": "2026-08-15T12:30:00.000Z" }
+    ],
+    "actionRequired": {
+      "type": "SUPPORTING_DOCUMENT_REQUIRED",
+      "reason": "Please upload a clear PDF copy of the Bill of Lading / Shipping Invoice under 1 MB to enable port-wise search."
+    }
+  },
+  {
+    "scenarioId": "F_RETURNED",
+    "registrationNumber": "MINHA/R/E/26/12093",
+    "type": "REQUEST",
+    "authorityId": "auth_minha",
+    "status": "RETURNED",
+    "isBplExempt": false,
+    "applicationFee": 10,
+    "filedOn": "2026-08-01T10:00:00.000Z",
+    "lastUpdated": "2026-08-07T15:00:00.000Z",
+    "applicant": {
+      "fullName": "Aarav Sharma",
+      "gender": "MALE",
+      "email": "aarav.sharma@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi",
+      "addressLine1": "Connaught Place",
+      "pincode": "110001"
+    },
+    "authority": {
+      "id": "auth_minha",
+      "code": "MINHA",
+      "name": "Ministry of Home Affairs",
+      "ministry": "Ministry of Home Affairs",
+      "type": "Central Government",
+      "active": true,
+      "cpioName": "Shri Vikramaditya Rao",
+      "cpioDesignation": "Deputy Secretary & CPIO",
+      "cpioEmail": "cpio.is@mha.gov.in",
+      "cpioPhone": "+91-11-23092011",
+      "faaName": "Shri Shailesh Kumar",
+      "faaDesignation": "Joint Secretary & FAA",
+      "address": "North Block, New Delhi",
+      "avgTurnaroundDays": 26
+    },
+    "bpl": { "isBpl": false },
+    "requestText": "Deployment metrics and operational telemetry of border surveillance radars in strategic border sectors.",
+    "supportingDocuments": [],
+    "timeline": [
+      { "state": "SUBMITTED", "title": "Application Lodged", "description": "Application submitted.", "at": "2026-08-01T10:00:00.000Z" },
+      { "state": "RETURNED", "title": "Rejected under Section 8(1)(a)", "description": "Disclosure exempt as it prejudicially impacts state security and sovereignty.", "at": "2026-08-07T15:00:00.000Z" }
+    ],
+    "returnReason": "The information requested relates to strategic national defense and border surveillance infrastructure, which is exempted from disclosure under Section 8(1)(a) of the RTI Act, 2005 as it prejudicially affects the sovereignty and integrity of India and security interests.",
+    "returnSection": "Section 8(1)(a) of the RTI Act, 2005",
+    "canAppeal": true
+  },
+  {
+    "scenarioId": "G_FIRST_APPEAL",
+    "registrationNumber": "MORTH/R/E/26/00341",
+    "type": "REQUEST",
+    "authorityId": "auth_morth",
+    "status": "RESPONSE_AVAILABLE",
+    "isBplExempt": false,
+    "applicationFee": 10,
+    "filedOn": "2026-07-15T09:00:00.000Z",
+    "lastUpdated": "2026-08-01T12:00:00.000Z",
+    "applicant": {
+      "fullName": "Aarav Sharma",
+      "gender": "MALE",
+      "email": "aarav.sharma@example.com",
+      "mobile": "9876543210",
+      "country": "India",
+      "state": "Delhi",
+      "city": "New Delhi",
+      "addressLine1": "Connaught Place",
+      "pincode": "110001"
+    },
+    "authority": {
+      "id": "auth_morth",
+      "code": "MORTH",
+      "name": "Ministry of Road Transport and Highways",
+      "ministry": "Ministry of Road Transport & Highways",
+      "type": "Central Government",
+      "active": true,
+      "cpioName": "Shri Harish Chand",
+      "cpioDesignation": "Superintending Engineer & CPIO",
+      "cpioEmail": "harish.morth@gov.in",
+      "cpioPhone": "+91-11-23717777",
+      "faaName": "Shri Alok Deepankar",
+      "faaDesignation": "Chief Engineer & FAA",
+      "address": "Transport Bhawan, New Delhi",
+      "avgTurnaroundDays": 22
+    },
+    "bpl": { "isBpl": false },
+    "requestText": "Safety inspection certificates and structural audit reports for NH-44 elevated corridor expansion.",
+    "supportingDocuments": [],
+    "timeline": [
+      { "state": "SUBMITTED", "title": "Application Lodged", "description": "Lodged under Sec 6(1).", "at": "2026-07-15T09:00:00.000Z" },
+      { "state": "RESPONSE_AVAILABLE", "title": "Partial Information Furnished", "description": "CPIO provided only general executive summary, withholding structural test reports.", "at": "2026-08-01T12:00:00.000Z" }
+    ],
+    "canAppeal": true
+  }
+]
