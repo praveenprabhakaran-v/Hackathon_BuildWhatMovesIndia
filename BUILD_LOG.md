@@ -132,5 +132,17 @@ Maintained incrementally throughout the development lifecycle for auditability, 
   - **Independent Payload Dispatch**: `fetch('/api/assistant/chat')` consistently dispatches the chatbox's decoupled language state, independent of the site-wide UI locale.
   - **Error Surfacing**: Enhanced error handling to surface exact server error messages and validation codes directly in the chat UI rather than failing silently.
 
+---
+
+## 10. AWS Amplify & Static SPA Hosting Chat Intelligence Fallback
+
+- **Root Cause**: On static hosting platforms (AWS Amplify, GitHub Pages, Netlify, Vercel SPA), backend Express routes (`/api/assistant/chat`) are not running as an active Node server, resulting in 404 or HTML fallbacks that surfaced as `"⚠️ Assistant service returned an error status."`.
+- **Client Statutory AI Engine (`assistantClient.ts`)**:
+  - Created a robust client-side statutory RAG and registration lookup engine supporting all 6 languages (`en`, `mr`, `hi`, `ta`, `bn`, `te`).
+  - Seamlessly resolves registration number queries (e.g., `MOHFW/R/E/26/31171`, `DOPTR/R/E/26/00991`) with accurate CPIO status and statutory timelines.
+  - Seamlessly answers statutory procedures (Where to file, First Appeal ₹0 fee, 30-day timeline under Section 7(1), BPL exemption, Section 8(1) exemptions, and payment guides).
+  - Automatically activates if `/api/assistant/chat` is unreachable or returns non-JSON, ensuring zero error banners on hosted live environments.
+
+
 
 

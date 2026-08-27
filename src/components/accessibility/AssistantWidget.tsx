@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../../lib/context/LanguageContext';
 import { Locale, SUPPORTED_LANGUAGES } from '../../lib/i18n';
+import { processClientChat } from '../../lib/assistantClient';
 
 interface Message {
   id: string;
@@ -359,23 +360,36 @@ export const AssistantWidget: React.FC<AssistantWidgetProps> = ({ onNavigate, on
     const activeReqLocked = isLanguageLockedRef.current;
 
     try {
-      const res = await fetch('/api/assistant/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: textToSend,
-          language: activeReqLang,
-          isLanguageLocked: activeReqLocked,
-        }),
-      });
+      let data: any = null;
 
-      if (!res.ok) {
-        const errorBody = await res.json().catch(() => ({ error: 'Assistant service returned an error status.' }));
-        console.error('[Chat Assistant] Request failed with HTTP', res.status, errorBody);
-        throw new Error(errorBody.error || errorBody.message || `Request failed with status ${res.status}`);
+      try {
+        const res = await fetch('/api/assistant/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: textToSend,
+            language: activeReqLang,
+            isLanguageLocked: activeReqLocked,
+          }),
+        });
+
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const resJson = await res.json();
+            if (resJson && resJson.reply) {
+              data = resJson;
+            }
+          }
+        }
+      } catch (networkErr) {
+        console.warn('[Assistant] Network/server fetch failed, using client intelligence engine:', networkErr);
       }
 
-      const data = await res.json();
+      // If backend was not reached (e.g. AWS Amplify / static SPA hosting), process via client-side statutory engine
+      if (!data) {
+        data = await processClientChat(textToSend, activeReqLang);
+      }
 
       // If language was not locked and model detected a new language, update chatLanguage
       if (!isLanguageLockedRef.current && data.detectedLanguage && data.detectedLanguage !== chatLanguageRef.current) {
