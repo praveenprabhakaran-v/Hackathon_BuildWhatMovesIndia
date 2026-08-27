@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { LanguageSelector } from './LanguageSelector';
 import { EmblemLogo } from './EmblemLogo';
+import { FontSizeToggle } from '../accessibility/FontSizeToggle';
 import { useLanguage } from '../../lib/context/LanguageContext';
 
 interface AppHeaderProps {
@@ -84,7 +85,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       <header className="bg-white/98 backdrop-blur-md border-b border-[#E2DDD5] shadow-xs transition-shadow duration-200">
         {/* Main Bar */}
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center justify-between min-h-[4rem] sm:min-h-[5rem] py-2">
             {/* Logo & Portal Identity */}
             <div
               className="flex items-center gap-2.5 sm:gap-3.5 cursor-pointer select-none group min-w-0"
@@ -117,7 +118,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             </div>
 
             {/* Desktop Right Tools (>= 1024px) */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-2.5 xl:gap-3">
+              <FontSizeToggle />
               <LanguageSelector />
 
               {currentUser ? (
@@ -162,7 +164,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             </div>
 
             {/* Mobile & Tablet Tools (< 1024px) */}
-            <div className="flex lg:hidden items-center gap-2">
+            <div className="flex lg:hidden items-center gap-1.5 sm:gap-2">
+              <FontSizeToggle />
               <LanguageSelector />
               <button
                 type="button"
