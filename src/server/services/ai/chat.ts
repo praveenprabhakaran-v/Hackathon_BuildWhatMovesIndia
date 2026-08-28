@@ -1,10 +1,10 @@
 /**
  * AI Assistant Chat & Orchestration Layer
- * Implements Gemini-powered status tool-calling, RAG grounded responses,
+ * Implements OpenAI-powered status tool-calling, RAG grounded responses,
  * multilingual support (en, hi, ta, mr, bn, te), text simplification, and document description.
  */
 
-import { GoogleGenAI, Type, FunctionDeclaration } from '@google/genai';
+import OpenAI from 'openai';
 import { store } from '../../store';
 import { retrieveContext } from './rag';
 
@@ -49,7 +49,6 @@ export function detectInputLanguage(text: string, defaultLang: SupportedLanguage
   if (/[\u0980-\u09FF]/.test(text)) return 'bn';
   // Devanagari (Hindi / Marathi): \u0900-\u097F
   if (/[\u0900-\u097F]/.test(text)) {
-    // Check for distinct Marathi words/characters if possible, otherwise default to hi or preserve current mr
     if (defaultLang === 'mr' || /\b(आहे|झाले|करणे|माहिती|अर्ज|नाही)\b/.test(text)) return 'mr';
     return 'hi';
   }
@@ -59,21 +58,25 @@ export function detectInputLanguage(text: string, defaultLang: SupportedLanguage
 }
 
 /**
- * Tool definition for getApplicationStatus
+ * OpenAI Tool definition for getApplicationStatus
  */
-const getApplicationStatusToolDeclaration: FunctionDeclaration = {
-  name: 'getApplicationStatus',
-  description:
-    'Look up the current real-time status of an RTI application or First Appeal by its unique registration number (e.g. DOPTR/R/E/26/00991 or DORF/R/E/26/00482). Always call this tool before answering questions regarding application status.',
-  parameters: {
-    type: Type.OBJECT,
-    properties: {
-      registrationNumber: {
-        type: Type.STRING,
-        description: 'The exact 18-character RTI or First Appeal Registration Number (e.g. DORF/R/E/26/00482 or MORTH/A/E/26/00142).',
+const getApplicationStatusTool: OpenAI.Chat.ChatCompletionTool = {
+  type: 'function',
+  function: {
+    name: 'getApplicationStatus',
+    description:
+      'Look up the current real-time status of an RTI application or First Appeal by its unique registration number (e.g. DOPTR/R/E/26/00991 or DORF/R/E/26/00482). Always call this tool before answering questions regarding application status.',
+    parameters: {
+      type: 'object',
+      properties: {
+        registrationNumber: {
+          type: 'string',
+          description:
+            'The exact 18-character RTI or First Appeal Registration Number (e.g. DORF/R/E/26/00482 or MORTH/A/E/26/00142).',
+        },
       },
+      required: ['registrationNumber'],
     },
-    required: ['registrationNumber'],
   },
 };
 
@@ -116,7 +119,7 @@ export function lookupApplicationStatus(registrationNumber: string) {
 }
 
 /**
- * Main Chat Processing Function
+ * Main Chat Processing Function using OpenAI API
  */
 export async function processCitizenChat(req: ChatRequest): Promise<ChatResponse> {
   const preferredLang: SupportedLanguage = req.language || 'en';
@@ -141,8 +144,8 @@ export async function processCitizenChat(req: ChatRequest): Promise<ChatResponse
   // Check if query is an explicit registration number pattern
   const regMatch = rawMessage.match(/[A-Z]{3,8}\/[RA]\/[A-Z]\/\d{2}\/\d{4,6}(?:\/\d+)?/i);
 
-  // Check if the API key is provided
-  const apiKey = process.env.GEMINI_API_KEY;
+  // Check for OpenAI API key
+  const apiKey = process.env.OPENAI_API_KEY;
 
   // SYSTEM INSTRUCTION with Brevity Rules, Few-shot Examples, and Decoupled Language Handling
   const systemInstruction = `
@@ -187,7 +190,7 @@ Would you like guidance on the 30-day appeal timeline or grounds?
 
   if (apiKey) {
     try {
-      const ai = new GoogleGenAI({ apiKey });
+      const openai = new OpenAI({ apiKey });
 
       // Retrieve grounded context
       const retrieved = retrieveContext(rawMessage, 3);
@@ -195,65 +198,54 @@ Would you like guidance on the 30-day appeal timeline or grounds?
         .map((c) => `[Source: ${c.title}]\n${c.content}`)
         .join('\n\n');
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.7-flash',
-        contents: [
-          {
-            role: 'user',
-            parts: [
-              {
-                text: `Target Response Language: ${LANGUAGE_NAMES[activeLanguage]} (${activeLanguage})\nContext knowledge:\n${contextText}\n\nCitizen Query: "${rawMessage}"`,
-              },
-            ],
-          },
+      const userContent = `Target Response Language: ${LANGUAGE_NAMES[activeLanguage]} (${activeLanguage})\nContext knowledge:\n${contextText}\n\nCitizen Query: "${rawMessage}"`;
+
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemInstruction },
+          { role: 'user', content: userContent },
         ],
-        config: {
-          systemInstruction,
-          tools: [{ functionDeclarations: [getApplicationStatusToolDeclaration] }],
-          temperature: 0.2,
-        },
+        tools: [getApplicationStatusTool],
+        tool_choice: 'auto',
+        temperature: 0.2,
       });
 
+      const responseMessage = completion.choices[0]?.message;
+
       // Handle function calling if invoked
-      const functionCalls = response.functionCalls;
-      if (functionCalls && functionCalls.length > 0) {
-        const call = functionCalls[0];
-        if (call.name === 'getApplicationStatus') {
-          const args = call.args as { registrationNumber: string };
-          const toolResult = lookupApplicationStatus(args.registrationNumber);
+      if (responseMessage?.tool_calls && responseMessage.tool_calls.length > 0) {
+        const toolCall = responseMessage.tool_calls[0];
+        if (toolCall.type === 'function' && toolCall.function.name === 'getApplicationStatus') {
+          let parsedArgs = { registrationNumber: '' };
+          try {
+            parsedArgs = JSON.parse(toolCall.function.arguments || '{}');
+          } catch {
+            parsedArgs = { registrationNumber: '' };
+          }
+
+          const toolResult = lookupApplicationStatus(parsedArgs.registrationNumber);
 
           // Second round to synthesize tool response
-          const secondResponse = await ai.models.generateContent({
-            model: 'gemini-3.7-flash',
-            contents: [
-              {
-                role: 'user',
-                parts: [{ text: `Citizen Query: "${rawMessage}"` }],
-              },
-              {
-                role: 'model',
-                parts: [{ functionCall: call }],
-              },
+          const secondCompletion = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            messages: [
+              { role: 'system', content: systemInstruction },
+              { role: 'user', content: userContent },
+              responseMessage,
               {
                 role: 'tool',
-                parts: [
-                  {
-                    functionResponse: {
-                      name: 'getApplicationStatus',
-                      response: toolResult,
-                    },
-                  },
-                ],
+                tool_call_id: toolCall.id,
+                content: JSON.stringify(toolResult),
               },
             ],
-            config: {
-              systemInstruction,
-              temperature: 0.2,
-            },
+            temperature: 0.2,
           });
 
+          const replyText = secondCompletion.choices[0]?.message?.content || 'Unable to summarize status at this time.';
+
           return {
-            reply: secondResponse.text || 'Unable to summarize status at this time.',
+            reply: replyText,
             language: activeLanguage,
             detectedLanguage: activeLanguage,
             usedTool: 'getApplicationStatus',
@@ -268,14 +260,14 @@ Would you like guidance on the 30-day appeal timeline or grounds?
       }));
 
       return {
-        reply: response.text || 'I could not generate an answer. Please verify with official portal resources.',
+        reply: responseMessage?.content || 'I could not generate an answer. Please verify with official portal resources.',
         language: activeLanguage,
         detectedLanguage: activeLanguage,
         sources,
         confidence: retrieved.confidence,
       };
     } catch (err) {
-      console.warn('[Gemini AI] Error in API call, falling back to local deterministic rule engine:', err);
+      console.warn('[OpenAI Assistant] Error in API call, falling back to local deterministic rule engine:', err);
     }
   }
 
@@ -344,33 +336,34 @@ Would you like guidance on the 30-day appeal timeline or grounds?
 }
 
 /**
- * Text Simplification (Grade-6 Plain Language)
+ * Text Simplification (Grade-6 Plain Language) using OpenAI gpt-4o-mini
  */
-export async function simplifyPassage(passage: string, language: SupportedLanguage = 'en'): Promise<{ simplified: string; language: SupportedLanguage }> {
-  const apiKey = process.env.GEMINI_API_KEY;
+export async function simplifyPassage(
+  passage: string,
+  language: SupportedLanguage = 'en'
+): Promise<{ simplified: string; language: SupportedLanguage }> {
+  const apiKey = process.env.OPENAI_API_KEY;
 
-  const prompt = `
-Rewrite the following official/legal passage in plain ${LANGUAGE_NAMES[language]}, at roughly a grade-6 reading level.
-Keep every factual claim, deadline, fee amount, and legal term (e.g., CPIO, First Appeal, Public Authority, Section 7(1)).
-Do not add information that isn't in the source text. Simplify the sentence structure, not the substance.
-
-Passage:
-${passage}
-`;
+  const systemPrompt = `You are an expert plain-language legal communicator. Rewrite official and statutory passages in plain ${LANGUAGE_NAMES[language]} at roughly a grade-6 reading level. Keep every factual claim, statutory deadline, fee amount, and statutory legal term (e.g., CPIO, First Appeal, Public Authority, Section 7(1)). Do not alter legal substance.`;
 
   if (apiKey) {
     try {
-      const ai = new GoogleGenAI({ apiKey });
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.7-flash',
-        contents: prompt,
+      const openai = new OpenAI({ apiKey });
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: passage },
+        ],
+        temperature: 0.2,
       });
 
-      if (response.text) {
-        return { simplified: response.text.trim(), language };
+      const simplified = completion.choices[0]?.message?.content?.trim();
+      if (simplified) {
+        return { simplified, language };
       }
     } catch (err) {
-      console.warn('[Gemini AI] Simplification fallback:', err);
+      console.warn('[OpenAI Assistant] Simplification fallback:', err);
     }
   }
 
@@ -382,27 +375,34 @@ ${passage}
 }
 
 /**
- * Multimodal Document Description (Gemini Vision)
+ * Multimodal Document Description using OpenAI gpt-4o Vision
  */
-export async function describeDocument(fileBase64: string, mimeType: string, language: SupportedLanguage = 'en'): Promise<{ description: string }> {
-  const apiKey = process.env.GEMINI_API_KEY;
+export async function describeDocument(
+  fileBase64: string,
+  mimeType: string,
+  language: SupportedLanguage = 'en'
+): Promise<{ description: string }> {
+  const apiKey = process.env.OPENAI_API_KEY;
 
   if (apiKey) {
     try {
-      const ai = new GoogleGenAI({ apiKey });
+      const openai = new OpenAI({ apiKey });
       const prompt = `Describe this document for a citizen using a screen reader, in ${LANGUAGE_NAMES[language]}, plainly and concisely. Highlight document type, issuing authority, dates, and subject matter.`;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.7-flash',
-        contents: [
+      const mime = mimeType.startsWith('image/') ? mimeType : 'image/png';
+      const dataUrl = `data:${mime};base64,${fileBase64}`;
+
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
           {
             role: 'user',
-            parts: [
-              { text: prompt },
+            content: [
+              { type: 'text', text: prompt },
               {
-                inlineData: {
-                  mimeType: mimeType || 'application/pdf',
-                  data: fileBase64,
+                type: 'image_url',
+                image_url: {
+                  url: dataUrl,
                 },
               },
             ],
@@ -410,15 +410,17 @@ export async function describeDocument(fileBase64: string, mimeType: string, lan
         ],
       });
 
-      if (response.text) {
-        return { description: response.text.trim() };
+      const description = completion.choices[0]?.message?.content?.trim();
+      if (description) {
+        return { description };
       }
     } catch (err) {
-      console.warn('[Gemini AI] Describe document fallback:', err);
+      console.warn('[OpenAI Assistant] Describe document fallback:', err);
     }
   }
 
   return {
-    description: 'The uploaded document appears to be a standard RTI supporting document or government record. Please review the file preview for detailed text.',
+    description:
+      'The uploaded document appears to be a standard RTI supporting document or government record. Please review the file preview for detailed text.',
   };
 }

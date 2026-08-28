@@ -14,7 +14,7 @@ Maintained incrementally throughout the development lifecycle for auditability, 
   - `JourneyRail`: Accessible multi-step wizard navigation with progress metrics and validation checkpoints.
   - `StatusBadge` & `Timeline`: Real-time state visualizers with official government status taxonomy.
   - `ApplicationTable`: Responsive, searchable, paginated table for citizen RTI and First Appeal histories.
-  - `AssistantWidget`: Full-featured AI assistant with multilingual chat, voice input (Web Speech API with editable transcript before submit), text-to-speech output, document descriptor (Gemini vision), and simplification actions.
+  - `AssistantWidget`: Full-featured AI assistant with multilingual chat, voice input (Web Speech API with editable transcript before submit), text-to-speech output, document descriptor (OpenAI vision), and simplification actions.
 - **Accessibility & Focus**:
   - `SkipToContent` component for keyboard screen reader users.
   - Semantic ARIA labels, live regions (`role="status"`, `aria-live="polite"`), and high-contrast color palette conforming to WCAG standards.
@@ -42,7 +42,7 @@ Maintained incrementally throughout the development lifecycle for auditability, 
 ## 3. AI Assistant, Multilingual Voice & RAG Specification
 
 - **AI Service Layer (`src/server/services/ai/*`)**:
-  - Utilizes `@google/genai` with model `gemini-3.7-flash` via server-side execution.
+  - Utilizes official `openai` SDK with model `gpt-4o` and `gpt-4o-mini` via server-side execution.
   - **Tool Use / Function Calling (`getApplicationStatus`)**: The model is restricted to a single read-only tool `getApplicationStatus(registrationNumber)` to check live status. It is structurally prohibited from guessing status or creating applications.
   - **Brevity & Prompt Engineering (Patch Update)**: System instructions enforce concise, punchy answers (3–5 sentences or tight lists of ≤4 bullets), direct answering with zero restatement of questions, bolding only key terms, and ending with an offer to expand further. Includes few-shot examples.
   - **RAG Pipeline (`src/server/services/ai/rag.ts`)**:
@@ -53,8 +53,8 @@ Maintained incrementally throughout the development lifecycle for auditability, 
     - `chatLanguage` operates independently from `siteLanguage`. The model and system auto-detect the input script/language when not locked.
     - Interactive `"Replying in {Language} (Auto/Locked)"` pill in the chat header with tap-to-lock control.
     - Legal terms (CPIO, First Appeal, Public Authority, Registration Number, Section 6(3), Section 7(1), BPL) remain untranslated to prevent statutory misinformation.
-  - **Multimodal Document Description (`/api/assistant/describe`)**: Gemini vision analysis for attached PDF / image documents to assist visually impaired citizens.
-  - **Text Simplification (`/api/assistant/simplify`)**: Grade-6 plain-language transformation for complex legal/statutory clauses without altering legal substance.
+  - **Multimodal Document Description (`/api/assistant/describe`)**: OpenAI Vision (`gpt-4o`) analysis for attached PDF / image documents to assist visually impaired citizens.
+  - **Text Simplification (`/api/assistant/simplify`)**: Grade-6 plain-language transformation for complex legal/statutory clauses via `gpt-4o-mini` without altering legal substance.
 
 ---
 
@@ -85,15 +85,15 @@ Maintained incrementally throughout the development lifecycle for auditability, 
 - **Real Government Backend**: Simulated mock environment — no connection to live NIC / DoPT servers.
 - **KYC & Identity**: No real Aadhaar / DigiLocker integration; relies on dummy authentication and OTP-scoped sessions.
 - **Payment Processing**: Simulated Bharatkosh gateway; no real banking/UPI credentials collected.
-- **Gemini Live API**: Evaluated browser Web Speech API over WebSockets Gemini Live API for hackathon reliability, lower latency, and zero dependency on external audio stream relays.
+- **Speech Synthesis**: Native browser Web Speech API for low latency and zero external dependency.
 
 ---
 
 ## 7. Governance Notes & Data Ethics
 
 1. **Citizen Data Access**: The AI assistant only accesses the current conversation turn and the specific application record retrieved via `getApplicationStatus`. No cross-user access or storage.
-2. **PII Isolation**: No card numbers, bank details, or passwords are ever sent to Gemini API prompts.
-3. **Processing Location**: AI processing is executed server-side via Google Gemini API (`@google/genai`).
+2. **PII Isolation**: No card numbers, bank details, or passwords are ever sent to OpenAI API prompts.
+3. **Processing Location**: AI processing is executed server-side via OpenAI API (`openai`).
 4. **Data Retention**: Chat sessions are stored exclusively in client-side memory (`sessionStorage`) and ephemeral server memory. No chat logs are permanently written to disk.
 5. **Human Authority Preservation**: All adjudications, fee decisions, and appeal outcomes remain strictly within the statutory purview of designated CPIOs and First Appellate Authorities (FAAs). AI solely serves an informative, assistive role.
 

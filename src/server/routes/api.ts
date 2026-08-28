@@ -405,7 +405,7 @@ apiRouter.post('/assistant/simplify', async (req: Request, res: Response, next: 
   }
 });
 
-// POST /api/assistant/describe (Gemini Vision Multimodal Document Descriptor)
+// POST /api/assistant/describe (OpenAI Vision Multimodal Document Descriptor)
 apiRouter.post('/assistant/describe', upload.single('document'), async (req: Request, res: Response, next: NextFunction) => {
   try {
     let base64Data = '';
