@@ -67,6 +67,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   ];
 
   const handleNav = (path: string) => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    document.body.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     onNavigate(path);
     setMobileMenuOpen(false);
   };

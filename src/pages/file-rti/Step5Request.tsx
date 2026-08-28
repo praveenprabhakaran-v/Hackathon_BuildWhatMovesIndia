@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRTIDraft } from '../../lib/context/rti-draft';
 import { useLanguage } from '../../lib/context/LanguageContext';
 import { FormSection } from '../../components/forms/FormSection';
 import { FormField } from '../../components/forms/FormField';
 import { CharacterCounter } from '../../components/forms/CharacterCounter';
+import { VirtualKeyboardWrapper } from '../../components/accessibility/VirtualKeyboardWrapper';
 import { validateRtiRequestText } from '../../lib/validation';
 import { ArrowLeft, ArrowRight, Lightbulb } from 'lucide-react';
 
@@ -17,6 +18,7 @@ export const Step5Request: React.FC<Step5RequestProps> = ({ onContinue, onBack }
   const { t } = useLanguage();
   const [text, setText] = useState(draft.request?.text || '');
   const [error, setError] = useState<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const sampleQueries = [
     'Kindly furnish certified copies of tender notices, committee meeting minutes, and vendor evaluation criteria for the digital procurement project in FY 2024-25.',
@@ -49,9 +51,20 @@ export const Step5Request: React.FC<Step5RequestProps> = ({ onContinue, onBack }
           error={error || undefined}
           helpTooltip="Under Section 6(1), state the particulars of the information sought. You do not need to give any reasons for requesting the information."
           helpTitle="Section 6(1) Guidance"
+          rightAction={
+            <VirtualKeyboardWrapper
+              value={text}
+              onChange={(val) => {
+                setText(val);
+                if (error) setError(null);
+              }}
+              targetInputRef={textareaRef}
+            />
+          }
         >
           <div className="space-y-1">
             <textarea
+              ref={textareaRef}
               id="rti-request-text"
               rows={8}
               value={text}

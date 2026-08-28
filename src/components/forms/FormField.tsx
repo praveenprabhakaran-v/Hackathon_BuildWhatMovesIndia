@@ -10,6 +10,7 @@ interface FormFieldProps {
   helperText?: string;
   helpTooltip?: string;
   helpTitle?: string;
+  rightAction?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
   disabled?: boolean;
@@ -23,6 +24,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   helperText,
   helpTooltip,
   helpTitle,
+  rightAction,
   children,
   className = '',
   disabled = false,
@@ -55,6 +57,7 @@ export const FormField: React.FC<FormFieldProps> = ({
             <HelpTooltip content={helpTooltip} title={helpTitle} term={label} />
           )}
         </label>
+        {rightAction && <div className="shrink-0">{rightAction}</div>}
         {required && <span className="sr-only">(required)</span>}
       </div>
 

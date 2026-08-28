@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, ChevronDown, Check, Building } from 'lucide-react';
 import { Authority } from '../../types/rti';
+import { useLanguage } from '../../lib/context/LanguageContext';
 
 interface SearchableSelectProps {
   id: string;
@@ -21,11 +22,30 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
   placeholder = 'Search by ministry name, authority, or code (e.g. Health, RAILW, MeitY)...',
   className = '',
 }) => {
+  const { currentLocale } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listboxId = `${id}-listbox`;
+
+  const getLocalizedName = (auth: Authority): string => {
+    if (currentLocale === 'hi' && auth.name_hi) return auth.name_hi;
+    if (currentLocale === 'bn' && auth.name_bn) return auth.name_bn;
+    if (currentLocale === 'mr' && auth.name_mr) return auth.name_mr;
+    if (currentLocale === 'te' && auth.name_te) return auth.name_te;
+    if (currentLocale === 'ta' && auth.name_ta) return auth.name_ta;
+    return auth.name_en || auth.name;
+  };
+
+  const getLocalizedMinistry = (auth: Authority): string => {
+    if (currentLocale === 'hi' && auth.ministry_hi) return auth.ministry_hi;
+    if (currentLocale === 'bn' && auth.ministry_bn) return auth.ministry_bn;
+    if (currentLocale === 'mr' && auth.ministry_mr) return auth.ministry_mr;
+    if (currentLocale === 'te' && auth.ministry_te) return auth.ministry_te;
+    if (currentLocale === 'ta' && auth.ministry_ta) return auth.ministry_ta;
+    return auth.ministry_en || auth.ministry;
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -39,10 +59,19 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
 
   const filtered = authorities.filter((a) => {
     const q = searchTerm.toLowerCase();
+    const locName = getLocalizedName(a).toLowerCase();
+    const locMinistry = getLocalizedMinistry(a).toLowerCase();
     return (
       a.name.toLowerCase().includes(q) ||
+      locName.includes(q) ||
       a.code.toLowerCase().includes(q) ||
       a.ministry.toLowerCase().includes(q) ||
+      locMinistry.includes(q) ||
+      (a.name_hi && a.name_hi.toLowerCase().includes(q)) ||
+      (a.name_bn && a.name_bn.toLowerCase().includes(q)) ||
+      (a.name_mr && a.name_mr.toLowerCase().includes(q)) ||
+      (a.name_te && a.name_te.toLowerCase().includes(q)) ||
+      (a.name_ta && a.name_ta.toLowerCase().includes(q)) ||
       (a.department && a.department.toLowerCase().includes(q))
     );
   });
@@ -81,10 +110,10 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
           {selectedAuthority ? (
             <div className="truncate">
               <span className="font-semibold text-sm text-[#1B1E22] block truncate">
-                {selectedAuthority.name}
+                {getLocalizedName(selectedAuthority)}
               </span>
               <span className="text-xs text-[#575D65] block truncate">
-                {selectedAuthority.ministry} ({selectedAuthority.code})
+                {getLocalizedMinistry(selectedAuthority)} ({selectedAuthority.code})
               </span>
             </div>
           ) : (
@@ -123,6 +152,8 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
             {filtered.length > 0 ? (
               filtered.map((auth) => {
                 const isSelected = selectedAuthority?.id === auth.id;
+                const locName = getLocalizedName(auth);
+                const locMinistry = getLocalizedMinistry(auth);
 
                 return (
                   <button
@@ -141,9 +172,9 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
                         <span className="text-xs font-mono-code font-bold px-1.5 py-0.5 rounded bg-gray-100 text-[#1B4B8F]">
                           {auth.code}
                         </span>
-                        <span className="text-sm font-semibold text-[#1B1E22] truncate">{auth.name}</span>
+                        <span className="text-sm font-semibold text-[#1B1E22] truncate">{locName}</span>
                       </div>
-                      <div className="text-xs text-[#575D65] mt-1">{auth.ministry}</div>
+                      <div className="text-xs text-[#575D65] mt-1">{locMinistry}</div>
                       <div className="text-[11px] text-[#1E7A46] mt-0.5 font-medium">
                         Avg. Response: {auth.avgTurnaroundDays} days · CPIO: {auth.cpioName}
                       </div>
@@ -166,4 +197,5 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
     </div>
   );
 };
+
 

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRTIDraft } from '../../lib/context/rti-draft';
 import { useLanguage } from '../../lib/context/LanguageContext';
 import { FormSection } from '../../components/forms/FormSection';
 import { FormField } from '../../components/forms/FormField';
 import { TextInput } from '../../components/forms/TextInput';
 import { Select } from '../../components/forms/Select';
+import { VirtualKeyboardWrapper } from '../../components/accessibility/VirtualKeyboardWrapper';
 import { validateApplicantDetails } from '../../lib/validation';
 import { ApplicantDetails } from '../../types/rti';
 import { ArrowLeft, ArrowRight, User, Mail, Phone, MapPin } from 'lucide-react';
@@ -27,6 +28,7 @@ const INDIAN_STATES = [
 export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBack }) => {
   const { draft, updateApplicant } = useRTIDraft();
   const { t } = useLanguage();
+  const fullNameRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState<ApplicantDetails>({
     fullName: draft.applicant?.fullName || '',
@@ -82,8 +84,16 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
           required
           error={errors.fullName}
           helperText="As per official photo identity document (e.g. Aarav Sharma)."
+          rightAction={
+            <VirtualKeyboardWrapper
+              value={form.fullName}
+              onChange={(val) => handleChange('fullName', val)}
+              targetInputRef={fullNameRef}
+            />
+          }
         >
           <TextInput
+            ref={fullNameRef}
             id="applicant-fullName"
             leftIcon={<User className="w-4 h-4" />}
             value={form.fullName}
@@ -118,16 +128,16 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
 
           <FormField
             id="applicant-category"
-            label="Residential Area Category"
-            helperText="For statistical reporting under DoPT guidelines."
+            label={t('form.applicant.category')}
+            helperText={t('form.applicant.category.helper')}
           >
             <Select
               id="applicant-category"
               value={form.category || 'URBAN'}
               onChange={(e) => handleChange('category', e.target.value as any)}
               options={[
-                { value: 'URBAN', label: 'Urban' },
-                { value: 'RURAL', label: 'Rural' },
+                { value: 'URBAN', label: t('form.applicant.category.urban') },
+                { value: 'RURAL', label: t('form.applicant.category.rural') },
               ]}
             />
           </FormField>

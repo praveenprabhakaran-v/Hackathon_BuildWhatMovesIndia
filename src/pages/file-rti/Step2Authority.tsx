@@ -15,11 +15,31 @@ interface Step2AuthorityProps {
 
 export const Step2Authority: React.FC<Step2AuthorityProps> = ({ onContinue, onBack }) => {
   const { draft, updateAuthority } = useRTIDraft();
-  const { t } = useLanguage();
+  const { currentLocale, t } = useLanguage();
   const [authorities, setAuthorities] = useState<Authority[]>([]);
   const [selected, setSelected] = useState<Authority | undefined>(draft.authority);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const getLocalizedName = (auth?: Authority): string => {
+    if (!auth) return '';
+    if (currentLocale === 'hi' && auth.name_hi) return auth.name_hi;
+    if (currentLocale === 'bn' && auth.name_bn) return auth.name_bn;
+    if (currentLocale === 'mr' && auth.name_mr) return auth.name_mr;
+    if (currentLocale === 'te' && auth.name_te) return auth.name_te;
+    if (currentLocale === 'ta' && auth.name_ta) return auth.name_ta;
+    return auth.name_en || auth.name;
+  };
+
+  const getLocalizedMinistry = (auth?: Authority): string => {
+    if (!auth) return '';
+    if (currentLocale === 'hi' && auth.ministry_hi) return auth.ministry_hi;
+    if (currentLocale === 'bn' && auth.ministry_bn) return auth.ministry_bn;
+    if (currentLocale === 'mr' && auth.ministry_mr) return auth.ministry_mr;
+    if (currentLocale === 'te' && auth.ministry_te) return auth.ministry_te;
+    if (currentLocale === 'ta' && auth.ministry_ta) return auth.ministry_ta;
+    return auth.ministry_en || auth.ministry;
+  };
 
   useEffect(() => {
     mockApi.searchAuthorities().then((res) => {
@@ -76,9 +96,9 @@ export const Step2Authority: React.FC<Step2AuthorityProps> = ({ onContinue, onBa
                   {t('form.authority.confirmed', { code: selected.code })}
                 </span>
                 <h4 className="text-base font-bold text-[#1B1E22] mt-1 font-display break-words">
-                  {selected.name}
+                  {getLocalizedName(selected)}
                 </h4>
-                <p className="text-xs text-[#575D65] break-words">{selected.ministry}</p>
+                <p className="text-xs text-[#575D65] break-words">{getLocalizedMinistry(selected)}</p>
               </div>
               <CheckCircle2 className="w-5 h-5 text-[#1E7A46] shrink-0" aria-hidden="true" />
             </div>

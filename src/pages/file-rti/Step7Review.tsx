@@ -14,13 +14,35 @@ interface Step7ReviewProps {
 
 export const Step7Review: React.FC<Step7ReviewProps> = ({ onContinue, onBack, onEditStep }) => {
   const { draft } = useRTIDraft();
-  const { t } = useLanguage();
+  const { currentLocale, t } = useLanguage();
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaError, setCaptchaError] = useState<string | null>(null);
 
   const isBpl = !!draft.bpl?.isBpl;
   const feeAmount = isBpl ? 0 : 10;
+
+  const getLocalizedName = () => {
+    const auth = draft.authority;
+    if (!auth) return 'Not selected';
+    if (currentLocale === 'hi' && auth.name_hi) return auth.name_hi;
+    if (currentLocale === 'bn' && auth.name_bn) return auth.name_bn;
+    if (currentLocale === 'mr' && auth.name_mr) return auth.name_mr;
+    if (currentLocale === 'te' && auth.name_te) return auth.name_te;
+    if (currentLocale === 'ta' && auth.name_ta) return auth.name_ta;
+    return auth.name_en || auth.name;
+  };
+
+  const getLocalizedMinistry = () => {
+    const auth = draft.authority;
+    if (!auth) return '';
+    if (currentLocale === 'hi' && auth.ministry_hi) return auth.ministry_hi;
+    if (currentLocale === 'bn' && auth.ministry_bn) return auth.ministry_bn;
+    if (currentLocale === 'mr' && auth.ministry_mr) return auth.ministry_mr;
+    if (currentLocale === 'te' && auth.ministry_te) return auth.ministry_te;
+    if (currentLocale === 'ta' && auth.ministry_ta) return auth.ministry_ta;
+    return auth.ministry_en || auth.ministry;
+  };
 
   const handleProceed = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,8 +79,8 @@ export const Step7Review: React.FC<Step7ReviewProps> = ({ onContinue, onBack, on
           </div>
 
           <div className="text-xs space-y-1">
-            <div className="font-semibold text-gray-900 text-sm break-words">{draft.authority?.name || 'Not selected'}</div>
-            <div className="text-gray-600 break-words">{draft.authority?.ministry} (Code: {draft.authority?.code})</div>
+            <div className="font-semibold text-gray-900 text-sm break-words">{getLocalizedName()}</div>
+            <div className="text-gray-600 break-words">{getLocalizedMinistry()} (Code: {draft.authority?.code})</div>
             <div className="text-gray-500 pt-1 break-words">CPIO: {draft.authority?.cpioName} ({draft.authority?.cpioDesignation})</div>
           </div>
         </div>
