@@ -1,9 +1,3 @@
-## Run Locally
+Grateful for the opportunity to be part of Build What Moves India! 
 
-**Prerequisites:**  Node.js
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Thank you, Varun Maaya and the entire team, and also OpenAI for creating this opportunity for developers to contribute and build. 
