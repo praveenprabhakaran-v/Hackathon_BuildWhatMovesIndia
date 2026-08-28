@@ -3,6 +3,7 @@ import { Download, Printer, ArrowRight, Building, User, Check } from 'lucide-rea
 import { RegistrationSeal } from './RegistrationSeal';
 import { RTIApplication, FirstAppealApplication } from '../../types/rti';
 import { generateRtiReceiptPdf } from '../../lib/pdfGenerator';
+import { printReceipt } from '../../lib/receiptPrinter';
 import { useLanguage } from '../../lib/context/LanguageContext';
 
 interface ConfirmationCardProps {
@@ -38,7 +39,11 @@ export const ConfirmationCard: React.FC<ConfirmationCardProps> = ({
   });
 
   const handlePrint = () => {
-    window.print();
+    if (target) {
+      printReceipt(target);
+    } else {
+      window.print();
+    }
   };
 
   const handleDownloadPdf = () => {

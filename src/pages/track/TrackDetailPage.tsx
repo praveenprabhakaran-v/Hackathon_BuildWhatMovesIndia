@@ -563,7 +563,14 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={() => {
+              try {
+                window.focus();
+                window.print();
+              } catch (e) {
+                console.warn('Print error:', e);
+              }
+            }}
             className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[40px] bg-white border border-[#1B4B8F] text-[#1B4B8F] text-xs font-semibold rounded-lg hover:bg-[#EEF3FA] whitespace-normal break-words"
           >
             <Printer className="w-3.5 h-3.5 shrink-0" />

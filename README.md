@@ -1,20 +1,9 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+I’m incredibly grateful to have participated in the Build What Moves India hackathon.
 
-# Run and deploy your AI Studio app
+A huge thank you to Varun Mayya, Maaya, and the entire team behind the hackathon, along with OpenAI, for creating such an inspiring platform for builders to experiment, learn, and bring their ideas to life.
 
-This contains everything you need to run your app locally.
+I’d also like to sincerely thank all the organizers, sponsors, mentors, and everyone involved for the guidance, feedback, and resources throughout the challenge.
 
-View your app in AI Studio: https://ai.studio/apps/1c6aeffe-d8f6-461b-948a-5e6fd9f86008
+Building this project has been an amazing journey — from an idea to something I could actually build, test, and share. The experience, learnings, and people I got to connect with made it truly special.
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Thank you for putting together an initiative that encourages people to build, experiment, and create what moves India. 🇮🇳

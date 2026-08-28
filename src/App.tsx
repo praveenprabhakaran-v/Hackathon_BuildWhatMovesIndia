@@ -76,10 +76,15 @@ export function AppContent() {
 
   // Scroll to top on route or step change
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    document.body.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }, [currentRoute, rtiStep, appealStep, trackRegNo]);
 
   const handleNavigate = (path: string) => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    document.body.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     setCurrentRoute(path);
     if (path === '/file-rti' && rtiStep >= 9) {
       setSubmittedApplication(null);
