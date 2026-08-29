@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
+import { useForm } from 'react-hook-form';
 import { useRTIDraft } from '../../lib/context/rti-draft';
 import { useLanguage } from '../../lib/context/LanguageContext';
 import { FormSection } from '../../components/forms/FormSection';
@@ -8,7 +9,7 @@ import { Select } from '../../components/forms/Select';
 import { VirtualKeyboardWrapper } from '../../components/accessibility/VirtualKeyboardWrapper';
 import { validateApplicantDetails } from '../../lib/validation';
 import { ApplicantDetails } from '../../types/rti';
-import { ArrowLeft, ArrowRight, User, Mail, Phone, MapPin } from 'lucide-react';
+import { ArrowLeft, ArrowRight, User, Mail, Phone, MapPin, Wand2 } from 'lucide-react';
 
 interface Step3ApplicantProps {
   onContinue: () => void;
@@ -30,64 +31,109 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
   const { t } = useLanguage();
   const fullNameRef = useRef<HTMLInputElement>(null);
 
-  const [form, setForm] = useState<ApplicantDetails>({
-    fullName: draft.applicant?.fullName || '',
-    gender: draft.applicant?.gender || '',
-    email: draft.applicant?.email || '',
-    mobile: draft.applicant?.mobile || '',
-    country: 'India',
-    state: draft.applicant?.state || '',
-    city: draft.applicant?.city || '',
-    addressLine1: draft.applicant?.addressLine1 || '',
-    addressLine2: draft.applicant?.addressLine2 || '',
-    pincode: draft.applicant?.pincode || '',
-    category: draft.applicant?.category || 'URBAN',
-    educationalStatus: draft.applicant?.educationalStatus || 'LITERATE',
+  const {
+    handleSubmit,
+    setValue,
+    watch,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<ApplicantDetails>({
+    defaultValues: {
+      fullName: draft.applicant?.fullName || '',
+      gender: draft.applicant?.gender || '',
+      email: draft.applicant?.email || '',
+      mobile: draft.applicant?.mobile || '',
+      country: 'India',
+      state: draft.applicant?.state || '',
+      city: draft.applicant?.city || '',
+      addressLine1: draft.applicant?.addressLine1 || '',
+      addressLine2: draft.applicant?.addressLine2 || '',
+      pincode: draft.applicant?.pincode || '',
+      category: draft.applicant?.category || 'URBAN',
+      educationalStatus: draft.applicant?.educationalStatus || 'LITERATE',
+    },
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const formValues = watch();
 
-  const handleChange = (field: keyof ApplicantDetails, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => {
-        const next = { ...prev };
-        delete next[field];
-        return next;
+  const handleAutoFill = () => {
+    const demoData: Partial<ApplicantDetails> = {
+      fullName: 'Demo Citizen',
+      gender: 'MALE',
+      category: 'URBAN',
+      email: 'demo.citizen@example.com',
+      mobile: '9800000000',
+      addressLine1: '12 Mock Bhavan',
+      addressLine2: 'Connaught Place',
+      city: 'New Delhi',
+      state: 'Delhi',
+      pincode: '110001',
+      country: 'India',
+      educationalStatus: 'LITERATE',
+    };
+
+    clearErrors();
+    Object.entries(demoData).forEach(([key, val]) => {
+      setValue(key as keyof ApplicantDetails, val as any, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
       });
-    }
+    });
   };
 
-  const handleProceed = (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = validateApplicantDetails(form);
+  const onSubmit = (data: ApplicantDetails) => {
+    const result = validateApplicantDetails(data);
 
     if (!result.isValid) {
-      setErrors(result.errors);
+      Object.entries(result.errors).forEach(([field, message]) => {
+        setError(field as any, { type: 'manual', message });
+      });
       return;
     }
 
-    updateApplicant(form);
+    updateApplicant(data);
     onContinue();
   };
 
   return (
-    <form onSubmit={handleProceed} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <FormSection
         title={t('form.applicant.title')}
         description={t('form.applicant.desc')}
       >
+        {/* Judge / Tester Auto-fill Utility */}
+        <div className="flex items-center justify-between pb-3 -mt-1 border-b border-gray-100 flex-wrap gap-2">
+          <div className="flex items-center gap-2 text-xs text-purple-900/80 font-medium">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-100 text-purple-800 border border-purple-200">
+              Judge Mode
+            </span>
+            <span className="hidden sm:inline text-gray-500">Quick-populate prototype citizen profile</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleAutoFill}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-300/80 hover:border-purple-400 rounded-lg transition-all shadow-2xs cursor-pointer focus:ring-2 focus:ring-purple-400 active:scale-[0.98]"
+            title="Populate test citizen profile instantly"
+          >
+            <Wand2 className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+            <span>Auto-fill Demo Data</span>
+          </button>
+        </div>
+
         {/* Full Name */}
         <FormField
           id="applicant-fullName"
           label={t('form.applicant.fullName')}
           required
-          error={errors.fullName}
+          error={errors.fullName?.message}
           helperText="As per official photo identity document (e.g. Aarav Sharma)."
           rightAction={
             <VirtualKeyboardWrapper
-              value={form.fullName}
-              onChange={(val) => handleChange('fullName', val)}
+              value={formValues.fullName}
+              onChange={(val) => setValue('fullName', val, { shouldValidate: true, shouldDirty: true })}
               targetInputRef={fullNameRef}
             />
           }
@@ -96,8 +142,8 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
             ref={fullNameRef}
             id="applicant-fullName"
             leftIcon={<User className="w-4 h-4" />}
-            value={form.fullName}
-            onChange={(e) => handleChange('fullName', e.target.value)}
+            value={formValues.fullName}
+            onChange={(e) => setValue('fullName', e.target.value, { shouldValidate: true, shouldDirty: true })}
             placeholder="e.g. Aarav Sharma"
             error={!!errors.fullName}
           />
@@ -109,12 +155,12 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
             id="applicant-gender"
             label={t('form.applicant.gender')}
             required
-            error={errors.gender}
+            error={errors.gender?.message}
           >
             <Select
               id="applicant-gender"
-              value={form.gender}
-              onChange={(e) => handleChange('gender', e.target.value as any)}
+              value={formValues.gender}
+              onChange={(e) => setValue('gender', e.target.value as any, { shouldValidate: true, shouldDirty: true })}
               error={!!errors.gender}
               placeholder={t('form.applicant.gender')}
               options={[
@@ -133,8 +179,8 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
           >
             <Select
               id="applicant-category"
-              value={form.category || 'URBAN'}
-              onChange={(e) => handleChange('category', e.target.value as any)}
+              value={formValues.category || 'URBAN'}
+              onChange={(e) => setValue('category', e.target.value as any, { shouldValidate: true, shouldDirty: true })}
               options={[
                 { value: 'URBAN', label: t('form.applicant.category.urban') },
                 { value: 'RURAL', label: t('form.applicant.category.rural') },
@@ -149,15 +195,15 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
             id="applicant-email"
             label={t('form.applicant.email')}
             required
-            error={errors.email}
+            error={errors.email?.message}
             helperText="Electronic alerts and registration slips are sent here."
           >
             <TextInput
               id="applicant-email"
               type="email"
               leftIcon={<Mail className="w-4 h-4" />}
-              value={form.email}
-              onChange={(e) => handleChange('email', e.target.value)}
+              value={formValues.email}
+              onChange={(e) => setValue('email', e.target.value, { shouldValidate: true, shouldDirty: true })}
               placeholder="name@example.com"
               error={!!errors.email}
             />
@@ -167,7 +213,7 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
             id="applicant-mobile"
             label={t('form.applicant.mobile')}
             required
-            error={errors.mobile}
+            error={errors.mobile?.message}
             helperText="10-digit Indian mobile number (e.g. 9876543210)."
           >
             <TextInput
@@ -175,8 +221,8 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
               type="tel"
               maxLength={10}
               leftIcon={<Phone className="w-4 h-4" />}
-              value={form.mobile}
-              onChange={(e) => handleChange('mobile', e.target.value.replace(/\D/g, ''))}
+              value={formValues.mobile}
+              onChange={(e) => setValue('mobile', e.target.value.replace(/\D/g, ''), { shouldValidate: true, shouldDirty: true })}
               placeholder="9876543210"
               error={!!errors.mobile}
             />
@@ -188,14 +234,14 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
           id="applicant-address1"
           label={t('form.applicant.address1')}
           required
-          error={errors.addressLine1}
+          error={errors.addressLine1?.message}
           helperText="Physical copies and certified records will be dispatched to this address."
         >
           <TextInput
             id="applicant-address1"
             leftIcon={<MapPin className="w-4 h-4" />}
-            value={form.addressLine1}
-            onChange={(e) => handleChange('addressLine1', e.target.value)}
+            value={formValues.addressLine1}
+            onChange={(e) => setValue('addressLine1', e.target.value, { shouldValidate: true, shouldDirty: true })}
             placeholder="Flat / House No., Building Name, Street"
             error={!!errors.addressLine1}
           />
@@ -209,8 +255,8 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
         >
           <TextInput
             id="applicant-address2"
-            value={form.addressLine2 || ''}
-            onChange={(e) => handleChange('addressLine2', e.target.value)}
+            value={formValues.addressLine2 || ''}
+            onChange={(e) => setValue('addressLine2', e.target.value, { shouldValidate: true, shouldDirty: true })}
             placeholder="e.g. Sector 6, Dwarka"
           />
         </FormField>
@@ -221,12 +267,12 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
             id="applicant-state"
             label={t('form.applicant.state')}
             required
-            error={errors.state}
+            error={errors.state?.message}
           >
             <Select
               id="applicant-state"
-              value={form.state}
-              onChange={(e) => handleChange('state', e.target.value)}
+              value={formValues.state}
+              onChange={(e) => setValue('state', e.target.value, { shouldValidate: true, shouldDirty: true })}
               placeholder={t('form.applicant.state')}
               error={!!errors.state}
               options={INDIAN_STATES.map((s) => ({ value: s, label: s }))}
@@ -237,12 +283,12 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
             id="applicant-city"
             label={t('form.applicant.city')}
             required
-            error={errors.city}
+            error={errors.city?.message}
           >
             <TextInput
               id="applicant-city"
-              value={form.city}
-              onChange={(e) => handleChange('city', e.target.value)}
+              value={formValues.city}
+              onChange={(e) => setValue('city', e.target.value, { shouldValidate: true, shouldDirty: true })}
               placeholder="e.g. New Delhi"
               error={!!errors.city}
             />
@@ -252,13 +298,13 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
             id="applicant-pincode"
             label={t('form.applicant.pincode')}
             required
-            error={errors.pincode}
+            error={errors.pincode?.message}
           >
             <TextInput
               id="applicant-pincode"
               maxLength={6}
-              value={form.pincode}
-              onChange={(e) => handleChange('pincode', e.target.value.replace(/\D/g, ''))}
+              value={formValues.pincode}
+              onChange={(e) => setValue('pincode', e.target.value.replace(/\D/g, ''), { shouldValidate: true, shouldDirty: true })}
               placeholder="110075"
               error={!!errors.pincode}
             />
@@ -288,3 +334,4 @@ export const Step3Applicant: React.FC<Step3ApplicantProps> = ({ onContinue, onBa
     </form>
   );
 };
+
