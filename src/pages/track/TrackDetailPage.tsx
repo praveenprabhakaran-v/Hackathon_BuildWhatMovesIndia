@@ -114,33 +114,35 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
 
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto py-16 text-center space-y-4">
+      <div className="flex-1 flex flex-col items-center justify-center py-16 text-center space-y-4">
         <RefreshCw className="w-8 h-8 text-[#1B4B8F] animate-spin mx-auto" />
-        <p className="text-sm font-semibold text-gray-700">Loading Application Status from Central RTI Registry...</p>
+        <p className="text-sm font-semibold text-gray-700">{t('track.loadingStatus')}</p>
       </div>
     );
   }
 
   if (notFound) {
     return (
-      <div className="max-w-xl mx-auto py-12 text-center space-y-4 bg-white p-8 rounded-2xl border border-[#E2DDD5] shadow-xs">
-        <div className="w-12 h-12 rounded-full bg-[#FDEEED] text-[#C23B22] flex items-center justify-center mx-auto">
-          <AlertTriangle className="w-6 h-6" />
-        </div>
-        <h2 className="text-xl font-bold text-[#1B1E22] font-display">
-          Registration Number Not Found
-        </h2>
-        <p className="text-xs text-[#575D65] leading-relaxed break-words">
-          No records match <strong className="font-mono-code">{registrationNumber}</strong>. Please check your registration slip for typos, or use the Payment Reconciliation tool if your session interrupted during checkout.
-        </p>
-        <div className="pt-4 flex justify-center gap-3">
-          <button
-            type="button"
-            onClick={onBackToSearch}
-            className="px-5 py-2.5 bg-[#1B4B8F] text-white text-xs font-semibold rounded-lg hover:bg-[#123362]"
-          >
-            Try Another Search
-          </button>
+      <div className="flex-1 flex flex-col items-center justify-center py-12 px-2">
+        <div className="max-w-xl w-full mx-auto text-center space-y-4 bg-white p-8 rounded-2xl border border-[#E2DDD5] shadow-xs">
+          <div className="w-12 h-12 rounded-full bg-[#FDEEED] text-[#C23B22] flex items-center justify-center mx-auto">
+            <AlertTriangle className="w-6 h-6" />
+          </div>
+          <h2 className="text-xl font-bold text-[#1B1E22] font-display">
+            {t('track.notFoundTitle')}
+          </h2>
+          <p className="text-xs text-[#575D65] leading-relaxed break-words">
+            {t('track.notFoundDesc', { regNo: registrationNumber })}
+          </p>
+          <div className="pt-4 flex justify-center gap-3">
+            <button
+              type="button"
+              onClick={onBackToSearch}
+              className="px-5 py-2.5 bg-[#1B4B8F] text-white text-xs font-semibold rounded-lg hover:bg-[#123362]"
+            >
+              {t('track.tryAnotherSearch')}
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -163,15 +165,15 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-mono-code font-bold uppercase tracking-wider text-[#1B4B8F] bg-[#EEF3FA] px-2.5 py-0.5 rounded inline-block whitespace-normal">
-                  First Appeal Case Record
+                  {t('track.appealCaseRecord')}
                 </span>
-                <span className="text-xs text-gray-500">· Section 19(1)</span>
+                <span className="text-xs text-gray-500">· {t('track.sec191')}</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold font-mono-code text-[#1B4B8F] break-all">
                 {appeal.appealRegistrationNumber}
               </h1>
               <p className="text-xs text-[#575D65] mt-0.5">
-                Filed on {new Date(appeal.filedOn).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
+                {t('track.filedOn', { date: new Date(appeal.filedOn).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) })}
               </p>
             </div>
 
@@ -180,21 +182,21 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             <div className="bg-[#F6F4EF]/60 p-4 rounded-xl space-y-1.5 border border-[#E2DDD5]">
-              <span className="font-bold text-[#1B1E22]">First Appellate Authority (FAA):</span>
+              <span className="font-bold text-[#1B1E22]">{t('track.faaTitle')}</span>
               <div className="text-gray-900 font-semibold break-words">{appeal.faaOfficer.name}</div>
               <div className="text-gray-600 break-words">{appeal.faaOfficer.designation}</div>
               <div className="text-gray-500 break-words">{appeal.authority.name}</div>
             </div>
 
             <div className="bg-[#F6F4EF]/60 p-4 rounded-xl space-y-1.5 border border-[#E2DDD5]">
-              <span className="font-bold text-[#1B1E22]">Original RTI Reference:</span>
+              <span className="font-bold text-[#1B1E22]">{t('track.originalRtiRef')}</span>
               <div className="font-mono-code font-semibold text-[#1B4B8F] break-all">{appeal.originalRegistrationNumber}</div>
-              <div className="text-gray-700 break-words"><strong>Ground:</strong> {appeal.groundLabel}</div>
+              <div className="text-gray-700 break-words"><strong>{t('track.ground')}</strong> {appeal.groundLabel}</div>
             </div>
           </div>
 
           <div className="mt-4 pt-4 border-t border-gray-100 text-xs">
-            <span className="font-bold text-[#1B1E22] block mb-1">Appeal Grievance Text:</span>
+            <span className="font-bold text-[#1B1E22] block mb-1">{t('track.appealGrievanceText')}</span>
             <p className="bg-[#F6F4EF]/80 p-3 rounded-lg text-gray-800 leading-relaxed font-mono-code text-[11px] whitespace-pre-wrap break-words">
               {appeal.appealText}
             </p>
@@ -227,15 +229,15 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs font-mono-code font-bold uppercase tracking-wider text-[#1B4B8F] bg-[#EEF3FA] px-2.5 py-0.5 rounded inline-block whitespace-normal">
-                RTI Application Record
+                {t('track.caseRecord')}
               </span>
-              <span className="text-xs text-gray-500">· Section 6(1)</span>
+              <span className="text-xs text-gray-500">· {t('track.sec61')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold font-mono-code text-[#1B4B8F] break-all">
               {app.registrationNumber}
             </h1>
             <p className="text-xs text-[#575D65] mt-0.5">
-              Filed on {new Date(app.filedOn).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
+              {t('track.filedOn', { date: new Date(app.filedOn).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) })}
             </p>
           </div>
 
@@ -247,41 +249,41 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
           <div className="bg-[#F6F4EF]/60 p-4 rounded-xl border border-[#E2DDD5] space-y-1.5">
             <div className="font-bold text-[#1B1E22] flex items-center gap-1.5 pb-1 border-b border-gray-200">
               <Building className="w-3.5 h-3.5 text-[#1B4B8F] shrink-0" />
-              <span>Public Authority & CPIO</span>
+              <span>{t('track.publicAuthCpio')}</span>
             </div>
             <div>
-              <span className="text-gray-500">Ministry: </span> <strong className="text-gray-800 break-words">{app.authority.ministry}</strong>
+              <span className="text-gray-500">{t('track.ministry')} </span> <strong className="text-gray-800 break-words">{app.authority.ministry}</strong>
             </div>
             <div>
-              <span className="text-gray-500">Authority: </span> <span className="text-gray-900 break-words">{app.authority.name}</span>
+              <span className="text-gray-500">{t('track.authority')} </span> <span className="text-gray-900 break-words">{app.authority.name}</span>
             </div>
             <div>
-              <span className="text-gray-500">Assigned CPIO: </span> <span className="text-gray-900 font-medium break-words">{app.authority.cpioName} ({app.authority.cpioDesignation})</span>
+              <span className="text-gray-500">{t('track.assignedCpio')} </span> <span className="text-gray-900 font-medium break-words">{app.authority.cpioName} ({app.authority.cpioDesignation})</span>
             </div>
             <div>
-              <span className="text-gray-500">Contact: </span> <span className="text-gray-600 break-all">{app.authority.cpioEmail} · {app.authority.cpioPhone}</span>
+              <span className="text-gray-500">{t('track.contact')} </span> <span className="text-gray-600 break-all">{app.authority.cpioEmail} · {app.authority.cpioPhone}</span>
             </div>
           </div>
 
           <div className="bg-[#F6F4EF]/60 p-4 rounded-xl border border-[#E2DDD5] space-y-1.5">
             <div className="font-bold text-[#1B1E22] flex items-center gap-1.5 pb-1 border-b border-gray-200">
               <User className="w-3.5 h-3.5 text-[#1B4B8F] shrink-0" />
-              <span>Applicant & Statutory Fee</span>
+              <span>{t('track.applicantFee')}</span>
             </div>
             <div>
-              <span className="text-gray-500">Applicant: </span> <strong className="text-gray-800 break-words">{app.applicant.fullName}</strong>
+              <span className="text-gray-500">{t('track.applicant')} </span> <strong className="text-gray-800 break-words">{app.applicant.fullName}</strong>
             </div>
             <div>
-              <span className="text-gray-500">Email: </span> <span className="font-mono-code text-gray-900 break-all">{app.applicant.email}</span>
+              <span className="text-gray-500">{t('track.email')} </span> <span className="font-mono-code text-gray-900 break-all">{app.applicant.email}</span>
             </div>
             <div>
-              <span className="text-gray-500">Fee Status: </span>{' '}
+              <span className="text-gray-500">{t('track.feeStatus')} </span>{' '}
               <span className="font-mono-code font-semibold text-[#1E7A46]">
-                {app.isBplExempt ? 'Fee Waived (BPL Card)' : `₹${app.applicationFee}.00 (${app.paymentMethod || 'Paid'})`}
+                {app.isBplExempt ? t('track.feeWaivedBpl') : `₹${app.applicationFee}.00 (${app.paymentMethod || 'Paid'})`}
               </span>
             </div>
             <div>
-              <span className="text-gray-500">Dispatch Address: </span>{' '}
+              <span className="text-gray-500">{t('track.dispatchAddress')} </span>{' '}
               <span className="text-gray-700 break-words">{app.applicant.city}, {app.applicant.state}</span>
             </div>
           </div>
@@ -289,7 +291,7 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
 
         {/* Query Summary Box */}
         <div className="border-t border-gray-100 pt-4 text-xs">
-          <span className="font-bold text-[#1B1E22] block mb-1">RTI Query on Record:</span>
+          <span className="font-bold text-[#1B1E22] block mb-1">{t('track.rtiQueryOnRecord')}</span>
           <p className="bg-[#F6F4EF]/80 p-3.5 rounded-lg text-gray-800 leading-relaxed font-mono-code text-[11px] whitespace-pre-wrap break-words">
             {app.requestText}
           </p>
@@ -307,17 +309,20 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
                 {t('track.responseTitle')}
               </span>
               <h3 className="text-xl font-bold text-[#11502C] mt-1 font-display break-words">
-                Information Disclosed by Public Authority
+                {t('track.infoDisclosed')}
               </h3>
               <p className="text-xs text-[#1E7A46] mt-0.5">
-                Released on {new Date(app.responseDocument.releasedOn).toLocaleDateString('en-IN')} · Dispatch Ref: {app.responseDocument.dispatchRef}
+                {t('track.releasedOn', {
+                  date: new Date(app.responseDocument.releasedOn).toLocaleDateString('en-IN'),
+                  ref: app.responseDocument.dispatchRef
+                })}
               </p>
             </div>
             <CheckCircle2 className="w-8 h-8 text-[#1E7A46] shrink-0" />
           </div>
 
           <div className="bg-white rounded-xl p-4 border border-[#BCE2C9] text-xs space-y-2">
-            <span className="font-bold text-gray-900 block">CPIO Official Remarks & Order Summary:</span>
+            <span className="font-bold text-gray-900 block">{t('track.cpioRemarks')}</span>
             <p className="text-gray-700 leading-relaxed font-mono-code text-[11px] bg-[#F6F4EF] p-3 rounded-lg break-words">
               {app.responseDocument.cpioRemarks}
             </p>
@@ -354,7 +359,7 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
       {app.status === 'ADDITIONAL_FEE_REQUIRED' && app.actionRequired && (
         <Notice
           variant="warning"
-          title="Action Required: Deposit Additional Copy Fee (Section 7(3))"
+          title={t('track.actionRequiredAdditionalFee')}
           action={
             <div className="flex items-center gap-3 pt-2">
               <button
@@ -366,12 +371,12 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
                 {feePaying ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin shrink-0" />
-                    <span>Processing Mock Fee Deposit...</span>
+                    <span>{t('track.processingMockDeposit')}</span>
                   </>
                 ) : (
                   <>
                     <CreditCard className="w-4 h-4 shrink-0" />
-                    <span>Deposit Additional Fee of ₹{app.actionRequired.amount}.00</span>
+                    <span>{t('track.depositFeeBtn', { amount: app.actionRequired.amount })}</span>
                   </>
                 )}
               </button>
@@ -381,13 +386,13 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
           <p className="text-xs leading-relaxed break-words">{app.actionRequired.reason}</p>
           {app.actionRequired.feeBreakdown && (
             <div className="bg-white rounded-lg p-3 border border-[#F4E3B5] mt-2 space-y-1 font-mono-code text-xs text-[#7C4E0A]">
-              <div>Pages Collated: <strong>{app.actionRequired.feeBreakdown.pages} pages</strong></div>
-              <div>Statutory Rate (RTI Rules 2012): ₹{app.actionRequired.feeBreakdown.ratePerPage}.00 per photostat page</div>
-              <div>Total Amount Demanded: <strong>₹{app.actionRequired.amount}.00</strong></div>
+              <div>{t('track.pagesCollated', { pages: app.actionRequired.feeBreakdown.pages })}</div>
+              <div>{t('track.statutoryRate', { rate: app.actionRequired.feeBreakdown.ratePerPage })}</div>
+              <div>{t('track.totalAmountDemanded', { amount: app.actionRequired.amount })}</div>
             </div>
           )}
           <p className="text-[11px] text-[#7C4E0A] mt-1 break-words">
-            Note: Under Section 7(3), the intervening period between fee demand and deposit is excluded from the 30-day calculation.
+            {t('track.sec73Note')}
           </p>
         </Notice>
       )}
@@ -401,7 +406,7 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
             <AlertTriangle className="w-6 h-6 text-[#B7791F] shrink-0 mt-0.5" />
             <div>
               <h3 className="text-base font-bold text-[#7C4E0A] break-words">
-                Action Required: Additional Clarification / Authorization Needed
+                {t('track.actionRequiredDoc')}
               </h3>
               <p className="text-xs text-[#1B1E22]/90 mt-1 leading-relaxed break-words">
                 {app.actionRequired.reason}
@@ -415,18 +420,18 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
               onFileSelect={(doc) => setDocUploadState((prev) => ({ ...prev, file: doc }))}
               onFileRemove={() => setDocUploadState((prev) => ({ ...prev, file: null }))}
               existingFile={docUploadState.file}
-              label="Upload Requested PDF Document"
+              label={t('track.uploadDocLabel')}
             />
 
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">
-                Applicant Clarification Note / Remarks:
+                {t('track.applicantClarificationLabel')}
               </label>
               <textarea
                 rows={2}
                 value={docUploadState.remarks}
                 onChange={(e) => setDocUploadState((prev) => ({ ...prev, remarks: e.target.value }))}
-                placeholder="Brief explanation of the attached document..."
+                placeholder={t('track.applicantClarificationPlaceholder')}
                 className="w-full p-2.5 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1B4B8F]/20"
               />
             </div>
@@ -440,12 +445,12 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
                 {docUploadState.submitting ? (
                   <>
                     <RefreshCw className="w-3.5 h-3.5 animate-spin shrink-0" />
-                    <span>Submitting Clarification...</span>
+                    <span>{t('track.submittingDoc')}</span>
                   </>
                 ) : (
                   <>
                     <Send className="w-3.5 h-3.5 shrink-0" />
-                    <span>Submit Document to CPIO</span>
+                    <span>{t('track.submitDocBtn')}</span>
                   </>
                 )}
               </button>
@@ -461,30 +466,30 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
         <div className="bg-white border-2 border-[#1B4B8F] rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono-code font-bold uppercase tracking-wider text-[#1B4B8F] bg-[#EEF3FA] px-2.5 py-0.5 rounded border border-[#1B4B8F]/30 inline-block whitespace-normal">
-              Statutory Transfer Notice · Section 6(3)
+              {t('track.transferNoticeTag')}
             </span>
           </div>
 
           <div>
             <h3 className="text-lg font-bold text-[#1B1E22] font-display break-words">
-              Transferred to Competent Public Authority
+              {t('track.transferredTitle')}
             </h3>
             <p className="text-xs text-[#575D65] mt-1 leading-relaxed break-words">
-              Under Section 6(3) of the RTI Act 2005, when subject matter is more closely connected with the functions of another public authority, the application must be transferred within 5 days.
+              {t('track.transferredDesc')}
             </p>
           </div>
 
           <div className="bg-[#EEF3FA] rounded-xl p-4 border border-[#1B4B8F]/20 space-y-2 text-xs">
             <div>
-              <span className="text-gray-500 block">Receiving Public Authority:</span>
+              <span className="text-gray-500 block">{t('track.receivingAuth')}</span>
               <strong className="text-base text-[#1B1E22] block mt-0.5 break-words">{app.transferredTo.authority}</strong>
             </div>
             <div>
-              <span className="text-gray-500 block">New Transferred Registration Number:</span>
+              <span className="text-gray-500 block">{t('track.newTransferredReg')}</span>
               <span className="font-mono-code font-bold text-sm text-[#1B4B8F] break-all">{app.transferredTo.registrationNumber}</span>
             </div>
             <div>
-              <span className="text-gray-500 block">Ground for Transfer:</span>
+              <span className="text-gray-500 block">{t('track.transferGround')}</span>
               <span className="text-gray-700 break-words">{app.transferredTo.reason}</span>
             </div>
           </div>
@@ -509,17 +514,17 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
           <div className="flex items-start justify-between gap-3">
             <div>
               <span className="text-xs font-mono-code font-bold uppercase tracking-wider text-[#C23B22] bg-white px-2.5 py-0.5 rounded border border-[#C23B22]/30 inline-block whitespace-normal">
-                Information Request Declined
+                {t('track.declinedTag')}
               </span>
               <h3 className="text-xl font-bold text-[#8A1F0C] mt-1 font-display break-words">
-                Exempted under {app.returnSection || 'Section 8(1) of RTI Act'}
+                {t('track.declinedTitle', { section: app.returnSection || 'Section 8(1) of RTI Act' })}
               </h3>
             </div>
             <AlertTriangle className="w-7 h-7 text-[#C23B22] shrink-0" />
           </div>
 
           <div className="bg-white p-4 rounded-xl border border-[#F6C6BF] text-xs space-y-1.5">
-            <span className="font-bold text-gray-900 block">Reason for Rejection:</span>
+            <span className="font-bold text-gray-900 block">{t('track.rejectionReason')}</span>
             <p className="text-gray-700 leading-relaxed font-mono-code text-[11px] break-words">
               {app.returnReason}
             </p>
@@ -533,7 +538,7 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
                 className="inline-flex items-center gap-2 px-6 py-2.5 min-h-[40px] bg-[#C23B22] text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-[#8A1F0C] transition-colors shadow-xs whitespace-normal break-words"
               >
                 <Scale className="w-4 h-4 shrink-0" />
-                <span>File First Appeal Against Rejection (₹0 Fee)</span>
+                <span>{t('track.fileAppealAgainstRejection')}</span>
               </button>
             </div>
           )}
@@ -557,7 +562,7 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
           className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[40px] bg-white border border-gray-300 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 transition-colors whitespace-normal break-words"
         >
           <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
-          <span>Search Another Case</span>
+          <span>{t('track.searchAnotherCase')}</span>
         </button>
 
         <div className="flex items-center gap-2">
@@ -574,7 +579,7 @@ export const TrackDetailPage: React.FC<TrackDetailPageProps> = ({
             className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[40px] bg-white border border-[#1B4B8F] text-[#1B4B8F] text-xs font-semibold rounded-lg hover:bg-[#EEF3FA] whitespace-normal break-words"
           >
             <Printer className="w-3.5 h-3.5 shrink-0" />
-            <span>Print Timeline</span>
+            <span>{t('track.printTimeline')}</span>
           </button>
         </div>
       </div>

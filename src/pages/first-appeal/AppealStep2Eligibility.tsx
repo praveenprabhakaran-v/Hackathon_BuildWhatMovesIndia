@@ -23,40 +23,40 @@ export const AppealStep2Eligibility: React.FC<AppealStep2EligibilityProps> = ({
   const grounds = [
     {
       value: 'NO_RESPONSE_RECEIVED',
-      label: 'No Response Received within 30 Days (Deemed Refusal)',
-      description: 'The statutory 30-day timeline under Section 7(1) expired without any communication or order from the CPIO.',
+      label: t('appeal.ground.noResponse.label'),
+      description: t('appeal.ground.noResponse.desc'),
     },
     {
       value: 'INCOMPLETE_INFORMATION',
-      label: 'Incomplete or Partial Information Provided',
-      description: 'The CPIO answered only a subset of questions or omitted key annexures/records requested.',
+      label: t('appeal.ground.incomplete.label'),
+      description: t('appeal.ground.incomplete.desc'),
     },
     {
       value: 'INFORMATION_REFUSED',
-      label: 'Information Unlawfully Refused / Rejected',
-      description: 'The CPIO rejected the application incorrectly citing exemptions under Section 8 or Section 9.',
+      label: t('appeal.ground.refused.label'),
+      description: t('appeal.ground.refused.desc'),
     },
     {
       value: 'MISLEADING_INFORMATION',
-      label: 'Misleading, False, or Distorted Information',
-      description: 'The information or data furnished is demonstrably inaccurate or contradicts official records.',
+      label: t('appeal.ground.misleading.label'),
+      description: t('appeal.ground.misleading.desc'),
     },
     {
       value: 'EXORBITANT_FEES_DEMANDED',
-      label: 'Unreasonable / Exorbitant Additional Fee Demanded',
-      description: 'Additional fee demanded under Section 7(3) is calculated incorrectly or in violation of RTI Rules 2012.',
+      label: t('appeal.ground.exorbitantFee.label'),
+      description: t('appeal.ground.exorbitantFee.desc'),
     },
     {
       value: 'OTHER',
-      label: 'Other Grievance Against CPIO Order',
-      description: 'Any other violation of citizen rights guaranteed under the RTI Act, 2005.',
+      label: t('appeal.ground.other.label'),
+      description: t('appeal.ground.other.desc'),
     },
   ];
 
   const handleProceed = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedGround) {
-      setError('Please select the statutory ground for filing this First Appeal.');
+      setError(t('appeal.errSelectGround'));
       return;
     }
     onContinue(selectedGround as AppealGround);
@@ -65,8 +65,8 @@ export const AppealStep2Eligibility: React.FC<AppealStep2EligibilityProps> = ({
   return (
     <form onSubmit={handleProceed} className="space-y-6">
       <FormSection
-        title="2. Statutory Ground for Appeal (Section 19(1))"
-        description="Select the primary legal ground on which you are seeking appellate review before the First Appellate Authority."
+        title={t('appeal.step2Title')}
+        description={t('appeal.step2Desc')}
       >
         <RadioGroup
           name="appeal-ground"

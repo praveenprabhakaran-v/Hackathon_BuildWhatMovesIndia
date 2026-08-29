@@ -170,7 +170,7 @@ export function AppContent() {
         />
       </div>
 
-      <main id="main-content" className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <main id="main-content" className="flex-1 flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         {/* ========================================================================= */}
         {/* ROUTE: HOME PAGE                                                          */}
         {/* ========================================================================= */}

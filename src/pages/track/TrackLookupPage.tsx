@@ -25,13 +25,13 @@ export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch, onNa
   };
 
   const sampleCases = [
-    { label: t('status.RESPONSE_AVAILABLE'), reg: 'DOTEL/R/2026/10492', desc: '5G spectrum allocation signed response with download' },
-    { label: t('status.ADDITIONAL_FEE_REQUIRED'), reg: 'MEITY/R/2026/49201', desc: 'Action required: Deposit ₹48 copy fees (24 pages @ ₹2)' },
+    { label: t('status.RESPONSE_AVAILABLE'), reg: 'DORF/R/E/26/00482', desc: 'GST guidelines response with official certified download' },
+    { label: t('status.ADDITIONAL_FEE_REQUIRED'), reg: 'MOHAF/R/E/26/00109', desc: 'Action required: Deposit ₹120 copy fees (60 pages @ ₹2)' },
     { label: t('status.DOC_REQUIRED'), reg: 'CBICD/R/2026/38102', desc: 'Action required: Upload proprietor authorization' },
-    { label: t('status.TRANSFERRED'), reg: 'RAILW/R/2026/89401', desc: 'Transferred to Northern Railway Division (Sec 6(3))' },
-    { label: t('status.MULTIPLE_CPIOS'), reg: 'MORTH/R/2026/77219', desc: 'Split into parallel NHAI & Ministry sub-cases' },
+    { label: t('status.TRANSFERRED'), reg: 'MEAF/R/E/26/00994', desc: 'Transferred to CPV Division & RPO (Sec 6(3))' },
+    { label: t('status.MULTIPLE_CPIOS'), reg: 'RAILW/R/E/26/01205', desc: 'Split into parallel Railway Board & Safety reviews' },
     { label: t('status.REJECTED'), reg: 'MINHA/R/2026/12093', desc: 'Declined under Section 8(1)(a) Security exemption' },
-    { label: t('status.UNDER_PROCESSING'), reg: 'DOPTR/R/2026/55120', desc: 'Active CPIO collation milestone' },
+    { label: t('status.UNDER_PROCESSING'), reg: 'DOPTR/R/E/26/00991', desc: 'Active CPIO collation milestone' },
   ];
 
   return (
@@ -63,7 +63,7 @@ export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch, onNa
             label={t('track.regLabel')}
             required
             error={error || undefined}
-            helperText="Format: [AUTH]/[R or A]/[YEAR]/[NUMBER] (e.g. DOTEL/R/2026/10492)"
+            helperText="Format: [AUTH]/[R or A]/[YEAR]/[NUMBER] (e.g. DORF/R/E/26/00482)"
           >
             <TextInput
               id="track-reg-input"
@@ -80,7 +80,7 @@ export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch, onNa
 
           <button
             type="submit"
-            className="w-full inline-flex items-center justify-center gap-2 py-3 px-6 min-h-[44px] bg-[#1B4B8F] text-white font-semibold text-sm rounded-xl hover:bg-[#123362] transition-colors shadow-sm focus:ring-4 focus:ring-[#1B4B8F]/20 whitespace-normal break-words"
+            className="w-full inline-flex items-center justify-center gap-2 py-3 px-6 min-h-[44px] bg-[#1B4B8F] text-white font-semibold text-sm rounded-xl hover:bg-[#123362] transition-colors shadow-sm focus:ring-4 focus:ring-[#1B4B8F]/20 whitespace-normal break-words cursor-pointer"
           >
             <Search className="w-4 h-4 shrink-0" />
             <span>{t('track.btnTrack')}</span>
@@ -105,7 +105,7 @@ export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch, onNa
               key={idx}
               type="button"
               onClick={() => onSearch(c.reg)}
-              className="text-left p-3.5 rounded-xl border border-gray-200 hover:border-[#1B4B8F] hover:bg-[#EEF3FA]/40 transition-all group flex flex-col justify-between min-h-[96px]"
+              className="text-left p-3.5 rounded-xl border border-gray-200 hover:border-[#1B4B8F] hover:bg-[#EEF3FA]/40 transition-all group flex flex-col justify-between min-h-[96px] cursor-pointer"
             >
               <div>
                 <span className="text-[11px] font-bold text-[#1B4B8F] block group-hover:underline break-words">

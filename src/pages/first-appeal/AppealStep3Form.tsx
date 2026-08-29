@@ -28,11 +28,11 @@ export const AppealStep3Form: React.FC<AppealStep3FormProps> = ({
   const handleProceed = (e: React.FormEvent) => {
     e.preventDefault();
     if (!appealText.trim() || appealText.trim().length < 15) {
-      setError('Please provide a detailed statement of grievance for the First Appellate Authority (min 15 characters).');
+      setError(t('appeal.errMinText'));
       return;
     }
     if (appealText.trim().length > 4000) {
-      setError('Appeal statement exceeds the maximum limit of 4,000 characters.');
+      setError(t('appeal.errMaxText'));
       return;
     }
 
@@ -42,15 +42,15 @@ export const AppealStep3Form: React.FC<AppealStep3FormProps> = ({
   return (
     <form onSubmit={handleProceed} className="space-y-6">
       <FormSection
-        title="3. Appeal Grievance & Statement of Facts"
-        description="Provide a clear factual summary explaining why the CPIO's reply or lack of response is unsatisfactory and what specific relief is sought from the First Appellate Authority."
+        title={t('appeal.step3Title')}
+        description={t('appeal.step3Desc')}
       >
         <FormField
           id="appeal-grievance-text"
-          label="Detailed Grounds / Prayer for Relief before FAA"
+          label={t('appeal.prayerLabel')}
           required
           error={error || undefined}
-          helperText="State specific points from your original RTI query that remain unanswered or unlawfully denied."
+          helperText={t('appeal.prayerHelper')}
         >
           <div className="space-y-1">
             <textarea
@@ -62,7 +62,7 @@ export const AppealStep3Form: React.FC<AppealStep3FormProps> = ({
                 setAppealText(e.target.value);
                 if (error) setError(null);
               }}
-              placeholder="e.g. The CPIO in order dated 15-July-2026 rejected Point 2 citing Section 8(1)(d), without demonstrating any commercial confidence or competitive harm. As substantial public interest is involved, I pray that the FAA set aside the CPIO order and direct disclosure..."
+              placeholder={t('appeal.prayerPlaceholder')}
               className={`w-full p-3.5 text-base rounded-lg border leading-relaxed transition-all placeholder:text-gray-400 ${
                 error
                   ? 'border-2 border-[#C23B22] focus:ring-2 focus:ring-[#C23B22]/20'
@@ -76,7 +76,7 @@ export const AppealStep3Form: React.FC<AppealStep3FormProps> = ({
         {/* Optional Document Upload */}
         <div className="pt-2">
           <label className="block text-sm font-medium text-[#1B1E22] mb-1.5 break-words">
-            Supporting Document / CPIO Order Copy (Optional PDF)
+            {t('appeal.docUploadLabel')}
           </label>
           <FileUpload
             id="appeal-doc-upload"
@@ -84,7 +84,7 @@ export const AppealStep3Form: React.FC<AppealStep3FormProps> = ({
             onFileRemove={() => setSupportingDoc(null)}
             existingFile={supportingDoc}
             maxSizeKb={1024}
-            helperText="You may upload a copy of the CPIO's written communication or additional evidence (PDF max 1 MB)."
+            helperText={t('appeal.docUploadHelper')}
           />
         </div>
       </FormSection>

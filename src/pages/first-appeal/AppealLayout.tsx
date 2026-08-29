@@ -38,7 +38,7 @@ export const AppealLayout: React.FC<AppealLayoutProps> = ({
       <div className="space-y-4 no-print px-1">
         <div>
           <span className="text-xs font-mono-code font-bold uppercase tracking-wider text-[#1B4B8F] bg-[#EEF3FA] px-2.5 py-0.5 rounded inline-block whitespace-normal break-words">
-            Form 2 — First Appeal under Section 19(1) of RTI Act
+            {t('appeal.form2Tag')}
           </span>
           <h1 className="text-2xl sm:text-3xl font-bold text-[#1B1E22] mt-1 font-display break-words">
             {t('appeal.title')}
