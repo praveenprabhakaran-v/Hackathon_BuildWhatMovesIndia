@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { FormSection } from '../../components/forms/FormSection';
 import { FormField } from '../../components/forms/FormField';
 import { TextInput } from '../../components/forms/TextInput';
@@ -6,12 +7,17 @@ import { mockApi } from '../../lib/mockApi';
 import { RTIApplication } from '../../types/rti';
 import { EMAIL_REGEX } from '../../lib/validation';
 import { useLanguage } from '../../lib/context/LanguageContext';
-import { Search, ArrowRight, CheckCircle2, RotateCw } from 'lucide-react';
+import { Search, ArrowRight, CheckCircle2, RotateCw, Wand2 } from 'lucide-react';
 
 interface AppealStep1LookupProps {
   initialRegNo?: string;
   initialEmail?: string;
   onOriginalFound: (app: RTIApplication, email: string) => void;
+}
+
+interface AppealLookupFormData {
+  registrationNumber: string;
+  email: string;
 }
 
 export const AppealStep1Lookup: React.FC<AppealStep1LookupProps> = ({
@@ -20,42 +26,54 @@ export const AppealStep1Lookup: React.FC<AppealStep1LookupProps> = ({
   onOriginalFound,
 }) => {
   const { t } = useLanguage();
-  const [regNo, setRegNo] = useState(initialRegNo);
-  const [email, setEmail] = useState(initialEmail);
-  const [errors, setErrors] = useState<{ regNo?: string; email?: string; general?: string }>({});
+  const [generalError, setGeneralError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [matchedApp, setMatchedApp] = useState<RTIApplication | null>(null);
 
-  const handleLookup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const newErrors: { regNo?: string; email?: string } = {};
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<AppealLookupFormData>({
+    defaultValues: {
+      registrationNumber: initialRegNo,
+      email: initialEmail,
+    },
+  });
 
-    if (!regNo.trim()) {
-      newErrors.regNo = t('appeal.errEnterReg');
-    }
-    if (!email.trim() || !EMAIL_REGEX.test(email.trim())) {
-      newErrors.email = t('appeal.errEnterEmail');
-    }
+  const registrationNumber = watch('registrationNumber');
+  const email = watch('email');
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+  const handleAutoFill = () => {
+    setValue('registrationNumber', 'DORF/R/E/26/00482', {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    setValue('email', 'demo.citizen@example.com', {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    setGeneralError(null);
+    setMatchedApp(null);
+  };
 
-    setErrors({});
+  const executeLookup = async (data: AppealLookupFormData) => {
+    setGeneralError(null);
     setIsLoading(true);
     setMatchedApp(null);
 
     try {
-      const app = await mockApi.getApplicationByRegNo(regNo.trim());
+      const app = await mockApi.getApplicationByRegNo(data.registrationNumber.trim());
       if (!app) {
-        setErrors({ general: t('appeal.errNotFound', { regNo }) });
+        setGeneralError(t('appeal.errNotFound', { regNo: data.registrationNumber }));
         return;
       }
 
       setMatchedApp(app);
     } catch (err: any) {
-      setErrors({ general: err.message || t('appeal.errSearchFailed') });
+      setGeneralError(err.message || t('appeal.errSearchFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -69,27 +87,43 @@ export const AppealStep1Lookup: React.FC<AppealStep1LookupProps> = ({
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleLookup}>
+      <form onSubmit={handleSubmit(executeLookup)}>
         <FormSection
           title={t('appeal.step1Title')}
           description={t('appeal.step1Desc')}
         >
+          {/* Quick Auto-fill Action */}
+          <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+            <span className="text-xs text-gray-500 font-medium">Quick Test Credentials</span>
+            <button
+              type="button"
+              onClick={handleAutoFill}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#1B4B8F] bg-[#EEF3FA] hover:bg-[#1B4B8F] hover:text-white border border-[#1B4B8F]/30 rounded-lg transition-all cursor-pointer shadow-2xs"
+            >
+              <Wand2 className="w-3.5 h-3.5 shrink-0" />
+              <span>Auto-fill Test Data</span>
+            </button>
+          </div>
+
           <FormField
             id="appeal-reg-no"
             label={t('appeal.origRegInput')}
             required
-            error={errors.regNo}
+            error={errors.registrationNumber?.message}
             helperText={t('appeal.origRegHelper')}
           >
             <TextInput
               id="appeal-reg-no"
-              value={regNo}
+              value={registrationNumber}
+              {...register('registrationNumber', {
+                required: t('appeal.errEnterReg') || 'Please enter original Registration Number',
+              })}
               onChange={(e) => {
-                setRegNo(e.target.value);
+                setValue('registrationNumber', e.target.value, { shouldValidate: true });
                 setMatchedApp(null);
               }}
               placeholder="e.g. DORF/R/E/26/00482"
-              error={!!errors.regNo}
+              error={!!errors.registrationNumber}
             />
           </FormField>
 
@@ -97,15 +131,22 @@ export const AppealStep1Lookup: React.FC<AppealStep1LookupProps> = ({
             id="appeal-email"
             label={t('appeal.emailInput')}
             required
-            error={errors.email}
+            error={errors.email?.message}
             helperText={t('appeal.emailHelper')}
           >
             <TextInput
               id="appeal-email"
               type="email"
               value={email}
+              {...register('email', {
+                required: t('appeal.errEnterEmail') || 'Please enter applicant email',
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: t('appeal.errEnterEmail') || 'Please enter a valid email address',
+                },
+              })}
               onChange={(e) => {
-                setEmail(e.target.value);
+                setValue('email', e.target.value, { shouldValidate: true });
                 setMatchedApp(null);
               }}
               placeholder="demo.citizen@example.com"
@@ -113,9 +154,9 @@ export const AppealStep1Lookup: React.FC<AppealStep1LookupProps> = ({
             />
           </FormField>
 
-          {errors.general && (
+          {generalError && (
             <div role="alert" className="p-3.5 bg-[#FDEEED] border border-[#C23B22]/30 rounded-xl text-xs text-[#C23B22] leading-relaxed break-words">
-              {errors.general}
+              {generalError}
             </div>
           )}
 

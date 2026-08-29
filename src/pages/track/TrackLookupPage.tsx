@@ -2,15 +2,23 @@ import React, { useState } from 'react';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { FormField } from '../../components/forms/FormField';
 import { TextInput } from '../../components/forms/TextInput';
+import { StatusBadge } from '../../components/status/StatusBadge';
 import { useLanguage } from '../../lib/context/LanguageContext';
 import { Search, ArrowRight } from 'lucide-react';
+import { ApplicationStatus } from '../../types/rti';
 
 interface TrackLookupPageProps {
   onSearch: (regNo: string) => void;
   onNavigateHome: () => void;
 }
 
-export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch, onNavigateHome }) => {
+interface SampleCase {
+  status: ApplicationStatus | string;
+  reg: string;
+  desc: string;
+}
+
+export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch }) => {
   const { t } = useLanguage();
   const [regNo, setRegNo] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -24,14 +32,42 @@ export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch, onNa
     onSearch(regNo.trim());
   };
 
-  const sampleCases = [
-    { label: t('status.RESPONSE_AVAILABLE'), reg: 'DORF/R/E/26/00482', desc: 'GST guidelines response with official certified download' },
-    { label: t('status.ADDITIONAL_FEE_REQUIRED'), reg: 'MOHAF/R/E/26/00109', desc: 'Action required: Deposit ₹120 copy fees (60 pages @ ₹2)' },
-    { label: t('status.DOC_REQUIRED'), reg: 'CBICD/R/2026/38102', desc: 'Action required: Upload proprietor authorization' },
-    { label: t('status.TRANSFERRED'), reg: 'MEAF/R/E/26/00994', desc: 'Transferred to CPV Division & RPO (Sec 6(3))' },
-    { label: t('status.MULTIPLE_CPIOS'), reg: 'RAILW/R/E/26/01205', desc: 'Split into parallel Railway Board & Safety reviews' },
-    { label: t('status.REJECTED'), reg: 'MINHA/R/2026/12093', desc: 'Declined under Section 8(1)(a) Security exemption' },
-    { label: t('status.UNDER_PROCESSING'), reg: 'DOPTR/R/E/26/00991', desc: 'Active CPIO collation milestone' },
+  const sampleCases: SampleCase[] = [
+    {
+      status: 'RESPONSE_AVAILABLE',
+      reg: 'DORF/R/E/26/00482',
+      desc: 'GST guidelines response with official certified download',
+    },
+    {
+      status: 'ADDITIONAL_FEE_REQUIRED',
+      reg: 'MOHAF/R/E/26/00109',
+      desc: 'Action required: Deposit ₹120 copy fees (60 pages @ ₹2)',
+    },
+    {
+      status: 'SUPPORTING_DOCUMENT_REQUIRED',
+      reg: 'CBICD/R/2026/38102',
+      desc: 'Action required: Upload proprietor authorization',
+    },
+    {
+      status: 'TRANSFERRED',
+      reg: 'MEAF/R/E/26/00994',
+      desc: 'Transferred to CPV Division & RPO (Sec 6(3))',
+    },
+    {
+      status: 'MULTIPLE_CPIO',
+      reg: 'RAILW/R/E/26/01205',
+      desc: 'Split into parallel Railway Board & Safety reviews',
+    },
+    {
+      status: 'RETURNED',
+      reg: 'MINHA/R/2026/12093',
+      desc: 'Declined under Section 8(1)(a) Security exemption',
+    },
+    {
+      status: 'UNDER_PROCESSING',
+      reg: 'DOPTR/R/E/26/00991',
+      desc: 'Active CPIO collation milestone',
+    },
   ];
 
   return (
@@ -105,12 +141,12 @@ export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch, onNa
               key={idx}
               type="button"
               onClick={() => onSearch(c.reg)}
-              className="text-left p-3.5 rounded-xl border border-gray-200 hover:border-[#1B4B8F] hover:bg-[#EEF3FA]/40 transition-all group flex flex-col justify-between min-h-[96px] cursor-pointer"
+              className="text-left p-3.5 rounded-xl border border-gray-200 hover:border-[#1B4B8F] hover:bg-[#EEF3FA]/40 transition-all group flex flex-col justify-between min-h-[105px] cursor-pointer"
             >
               <div>
-                <span className="text-[11px] font-bold text-[#1B4B8F] block group-hover:underline break-words">
-                  {c.label}
-                </span>
+                <div className="mb-2">
+                  <StatusBadge status={c.status} size="sm" />
+                </div>
                 <span className="text-xs font-mono-code font-bold text-[#1B1E22] block mt-0.5">
                   {c.reg}
                 </span>
@@ -119,7 +155,7 @@ export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch, onNa
                 </p>
               </div>
               <div className="flex items-center gap-1 text-[11px] text-[#1B4B8F] font-semibold mt-2 group-hover:translate-x-0.5 transition-transform">
-                <span>{t('btn.trackStatus')}</span>
+                <span>{t('btn.trackStatus') || 'Track Status'}</span>
                 <ArrowRight className="w-3 h-3 shrink-0" />
               </div>
             </button>
@@ -129,3 +165,4 @@ export const TrackLookupPage: React.FC<TrackLookupPageProps> = ({ onSearch, onNa
     </div>
   );
 };
+

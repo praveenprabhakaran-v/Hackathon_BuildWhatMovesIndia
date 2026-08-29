@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Keyboard, X, Delete, CornerDownLeft, Space } from 'lucide-react';
+import { motion, useDragControls } from 'motion/react';
+import { Keyboard, X, Delete, CornerDownLeft, Space, GripHorizontal, Move } from 'lucide-react';
 import { useLanguage } from '../../lib/context/LanguageContext';
 
 export interface VirtualKeyboardWrapperProps {
@@ -124,6 +125,7 @@ export const VirtualKeyboardWrapper: React.FC<VirtualKeyboardWrapperProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isShift, setIsShift] = useState(false);
   const keyboardContainerRef = useRef<HTMLDivElement>(null);
+  const dragControls = useDragControls();
 
   // If English is selected or layout is unavailable, do not render keyboard toggle
   const layout = INDIC_KEYBOARD_LAYOUTS[currentLocale];
@@ -204,23 +206,46 @@ export const VirtualKeyboardWrapper: React.FC<VirtualKeyboardWrapperProps> = ({
         <span>{buttonLabel || langInfo.label}</span>
       </button>
 
-      {/* Floating On-Screen Keyboard Drawer */}
+      {/* Floating Draggable On-Screen Keyboard Drawer */}
       {isOpen && (
-        <div
+        <motion.div
           ref={keyboardContainerRef}
           role="region"
           aria-label={langInfo.title}
-          className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 w-[96vw] max-w-[580px] bg-[#FAF9F5] border-2 border-[#1B4B8F] rounded-2xl p-3 sm:p-4 shadow-2xl animate-in fade-in slide-in-from-bottom-3 duration-150"
+          drag
+          dragControls={dragControls}
+          dragListener={false}
+          dragMomentum={false}
+          dragElastic={0.05}
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          style={{ zIndex: 9999 }}
+          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-[9999] w-[96vw] max-w-[580px] bg-[#FAF9F5] border-2 border-[#1B4B8F] rounded-2xl p-3 sm:p-4 shadow-2xl touch-none"
         >
-          {/* Header */}
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E2DDD5]">
+          {/* Header Bar with Drag Handle */}
+          <div
+            onPointerDown={(e) => dragControls.start(e)}
+            className="flex items-center justify-between pb-2 mb-2 border-b border-[#E2DDD5] cursor-grab active:cursor-grabbing select-none bg-[#F3EFE6] -mx-3 -mt-3 sm:-mx-4 sm:-mt-4 px-3 sm:px-4 pt-2.5 pb-2 rounded-t-2xl"
+            title="Click and drag to reposition keyboard"
+          >
             <div className="flex items-center gap-2 min-w-0">
-              <Keyboard className="w-4 h-4 text-[#1B4B8F] shrink-0" />
-              <span className="text-xs sm:text-sm font-bold text-[#1B4B8F] font-display truncate">
-                {langInfo.title}
+              <div className="p-1 bg-white/80 rounded text-[#1B4B8F] border border-gray-200">
+                <GripHorizontal className="w-4 h-4" />
+              </div>
+              <div className="flex items-center gap-1.5 truncate">
+                <Keyboard className="w-3.5 h-3.5 text-[#1B4B8F] shrink-0" />
+                <span className="text-xs sm:text-sm font-bold text-[#1B4B8F] font-display truncate">
+                  {langInfo.title}
+                </span>
+              </div>
+              <span className="hidden md:inline-flex items-center gap-1 text-[10px] text-gray-500 font-medium bg-white/60 px-1.5 py-0.5 rounded">
+                <Move className="w-2.5 h-2.5" />
+                Drag to Move
               </span>
             </div>
-            <div className="flex items-center gap-1.5 shrink-0">
+
+            <div className="flex items-center gap-1.5 shrink-0" onPointerDown={(e) => e.stopPropagation()}>
               <button
                 type="button"
                 onClick={() => setIsShift(!isShift)}
@@ -244,7 +269,7 @@ export const VirtualKeyboardWrapper: React.FC<VirtualKeyboardWrapperProps> = ({
           </div>
 
           {/* Key Rows */}
-          <div className="space-y-1.5 select-none">
+          <div className="space-y-1.5 select-none pt-1">
             {currentRows.map((row, rowIdx) => (
               <div key={rowIdx} className="flex justify-center gap-1">
                 {row.map((char, charIdx) => (
@@ -290,8 +315,9 @@ export const VirtualKeyboardWrapper: React.FC<VirtualKeyboardWrapperProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );
 };
+
